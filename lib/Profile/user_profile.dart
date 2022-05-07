@@ -492,7 +492,6 @@ Future<ProfileModel> fetchProfileData() async {
     'Authorization': 'Bearer $loginToken'};
 
   var url = 'https://seller.sastowholesale.com/api/user/show-user-image/';
-
   final response = await http.get(Uri.parse(url + userId.toString()), headers: header);
   if (response.statusCode == 200) {
     var jsonResponse = json.decode(response.body);

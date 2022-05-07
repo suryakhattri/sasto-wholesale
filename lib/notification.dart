@@ -77,7 +77,14 @@ class _NotificationPageState extends State<NotificationPage> {
           "Notification",
           style: TextStyle(color: Colors.red),
         ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios_rounded, color: Colors.black,),
+          onPressed: (){
+          Navigator.pop(context);
+      },
+        ),
         actions: [
+
           Padding(
             padding: const EdgeInsets.only(right: 10.0),
             child: Icon(
