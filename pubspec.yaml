@@ -41,6 +41,7 @@ dependencies:
   photo_view: ^0.13.0
   flutter_html: ^2.2.0
   path_provider:
+  sms_autofill:
 
 dev_dependencies:
   flutter_test:
