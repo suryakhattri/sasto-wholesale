@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:sasto_wholesale/BlogList/all_blog.dart';
 import 'package:sasto_wholesale/BlogList/blog_List.dart';
 import 'package:sasto_wholesale/Categories/MeghaMenu/megha_menu.dart';
 import 'package:sasto_wholesale/Country/country.dart';
@@ -24,14 +25,11 @@ import 'SastoWholeSale/sasto_wholesale_market.dart';
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
-
   @override
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-
-
   final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
 
   PageController pageController = PageController();
@@ -118,8 +116,8 @@ class _HomeState extends State<Home> {
             SizedBox(
               height: 10,
             ),
-            _buildSectionTitle("Sasto Wholesale Market", () {},
-                Icons.home_repair_service, ""),
+            _buildSectionTitle(
+                "Sasto Wholesale Market", () {}, Icons.home_repair_service, ""),
             SizedBox(
               height: 10,
             ),
@@ -131,14 +129,16 @@ class _HomeState extends State<Home> {
             SizedBox(
               height: 10,
             ),
-           // Divider(thickness:1,),
+            // Divider(thickness:1,),
             MeghaMenu(),
             SizedBox(
               height: 10,
             ),
-            Divider(thickness:1,),
+            Divider(
+              thickness: 1,
+            ),
             _buildSectionTitle(
-                "Our Services", () {}, Icons.add_shopping_cart_outlined, ""),
+                "Services", () {}, Icons.add_shopping_cart_outlined, ""),
             SizedBox(
               height: 10,
             ),
@@ -213,9 +213,7 @@ class _HomeState extends State<Home> {
             SizedBox(
               height: 10,
             ),
-            _buildSectionTitle("Blogs", () {
-              //Navigator.push(context, (builder: (_) => BlogList()));
-            }, Icons.accessible, "View All Blog"),
+            _blogSectionTitle(context),
             Divider(
               thickness: 0.5,
               color: Colors.grey,
@@ -297,29 +295,33 @@ class _HomeState extends State<Home> {
                       return Column(
                         children: [
                           Container(
-                            height:200,
+                            height: 200,
                             child: PageView.builder(
-                              onPageChanged: (index){
+                              onPageChanged: (index) {
                                 _selectedIndex = index;
                               },
                               controller: pageController,
                               itemCount: _sliderData.length,
-                              itemBuilder: (context, index){
+                              itemBuilder: (context, index) {
                                 var banner = _sliderData[index];
-                                var _scale = _selectedIndex == index ? 1.0: 0.8;
+                                var _scale =
+                                    _selectedIndex == index ? 1.0 : 0.8;
                                 return TweenAnimationBuilder(
                                   tween: Tween(begin: _scale, end: _scale),
                                   duration: const Duration(milliseconds: 350),
-                                  builder: ( context, double value, child) {
-                                    return Transform.scale(scale: value, child: child,);
+                                  builder: (context, double value, child) {
+                                    return Transform.scale(
+                                      scale: value,
+                                      child: child,
+                                    );
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
-                                        image: DecorationImage(
-                                            image: NetworkImage(_sliderData[index].imageUrl),
-                                            fit: BoxFit.cover
-                                        ),
+                                      image: DecorationImage(
+                                          image: NetworkImage(
+                                              _sliderData[index].imageUrl),
+                                          fit: BoxFit.cover),
                                     ),
                                     child: DefaultTextStyle(
                                       style: TextStyle(color: Colors.white),
@@ -327,14 +329,17 @@ class _HomeState extends State<Home> {
                                         children: [
                                           Container(
                                             decoration: BoxDecoration(
-                                              color: Color.fromRGBO(0, 0, 0, 0.3),
+                                              color:
+                                                  Color.fromRGBO(0, 0, 0, 0.3),
                                             ),
                                           ),
                                           Column(
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: [
-                                             // Text(_sliderData[index].title)
+                                              // Text(_sliderData[index].title)
                                             ],
                                           ),
                                         ],
@@ -356,19 +361,26 @@ class _HomeState extends State<Home> {
                               // ],
                             ),
                           ),
-                          SizedBox(height: 5,),
+                          SizedBox(
+                            height: 5,
+                          ),
                           Expanded(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               // crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                ...List.generate(_sliderData.length, (index) => SlideIndicator(isActive: _selectedIndex == index? true: false,)),
+                                ...List.generate(
+                                    _sliderData.length,
+                                    (index) => SlideIndicator(
+                                          isActive: _selectedIndex == index
+                                              ? true
+                                              : false,
+                                        )),
                               ],
                             ),
                           ),
                         ],
                       );
-
                     } else if (snapshot.hasError) {
                       return Text('${snapshot.error}');
                     }
@@ -376,10 +388,10 @@ class _HomeState extends State<Home> {
                         alignment: Alignment.center,
                         margin: EdgeInsets.only(top: 20),
                         child: CircularProgressIndicator(
-                          // backgroundColor: Colors.grey,
-                          //color: Colors.purple,
-                          // valueColor: ,
-                        ));
+                            // backgroundColor: Colors.grey,
+                            //color: Colors.purple,
+                            // valueColor: ,
+                            ));
                   },
                 ),
               ],
@@ -401,206 +413,10 @@ class _HomeState extends State<Home> {
         //     ],
         //   ),
         // ),
-
-
-
       ],
     );
   }
 }
-
-// drawer for home
-// Widget _drawerHome(BuildContext context) {
-//   return Drawer(
-//     child: Container(
-//       color: Colors.blue[900],
-//       child: Padding(
-//         padding: const EdgeInsets.only(top: 0.0, left: 10.0, right: 10.0),
-//         child: ListView(
-//           shrinkWrap: true,
-//           physics: NeverScrollableScrollPhysics(),
-//           children: [
-//             ListTile(
-//               title: Text(
-//                 "Welcome to Sasto Wholesale!",
-//                 style: TextStyle(
-//                     color: Colors.white,
-//                     fontSize: 17,
-//                     fontWeight: FontWeight.bold),
-//               ),
-//             ),
-//             Divider(
-//               thickness: 0.5,
-//               color: Colors.white,
-//             ),
-//             ListTile(
-//               leading: Icon(
-//                 Icons.ad_units,
-//                 size: 20,
-//                 color: Colors.white,
-//               ),
-//               title: Text(
-//                 "My Orders",
-//                 style: TextStyle(
-//                     color: Colors.white,
-//                     fontSize: 17,
-//                     fontWeight: FontWeight.bold),
-//               ),
-//               onTap: () {
-//                 Navigator.push(context,
-//                     MaterialPageRoute(builder: (context) => new MyOrder()));
-//               },
-//             ),
-//             Divider(
-//               thickness: 0.5,
-//               color: Colors.white,
-//             ),
-//             ListTile(
-//               leading: Icon(Icons.wc, size: 20, color: Colors.white),
-//               title: Text(
-//                 "My Deals",
-//                 style: TextStyle(
-//                     color: Colors.white,
-//                     fontSize: 17,
-//                     fontWeight: FontWeight.bold),
-//               ),
-//               onTap: () {
-//                 Navigator.push(context,
-//                     MaterialPageRoute(builder: (context) => new MyDeals()));
-//               },
-//             ),
-//             Divider(
-//               thickness: 0.5,
-//               color: Colors.white,
-//             ),
-//             ListTile(
-//               leading: Icon(Icons.question_answer_rounded,
-//                   size: 20, color: Colors.white),
-//               title: Text(
-//                 "Message",
-//                 style: TextStyle(
-//                     color: Colors.white,
-//                     fontSize: 17,
-//                     fontWeight: FontWeight.bold),
-//               ),
-//             ),
-//             // Divider(
-//             //   thickness: 0.5,
-//             //   color: Colors.white,
-//             // ),
-//             // ListTile(
-//             //   leading: Icon(Icons.add_shopping_cart_rounded,
-//             //       size: 20, color: Colors.white),
-//             //   title: Text(
-//             //     "Cart",
-//             //     style: TextStyle(
-//             //         color: Colors.white,
-//             //         fontSize: 17,
-//             //         fontWeight: FontWeight.bold),
-//             //   ),
-//             //   onTap: () {
-//             //     Navigator.push(context,
-//             //         MaterialPageRoute(builder: (context) => new ShoppingCartPage()));
-//             //   },
-//             // ),
-//             Divider(
-//               thickness: 0.5,
-//               color: Colors.white,
-//             ),
-//             ListTile(
-//               leading:
-//                   Icon(Icons.shopping_basket, size: 20, color: Colors.white),
-//               title: Text(
-//                 "Products",
-//                 style: TextStyle(
-//                     color: Colors.white,
-//                     fontSize: 17,
-//                     fontWeight: FontWeight.bold),
-//               ),
-//               onTap: () {
-//                 Navigator.push(context,
-//                     MaterialPageRoute(builder: (context) => new Products()));
-//               },
-//             ),
-//             Divider(
-//               thickness: 0.5,
-//               color: Colors.white,
-//             ),
-//             ListTile(
-//               leading: Icon(Icons.attribution_outlined,
-//                   size: 20, color: Colors.white),
-//               title: Text(
-//                 "Suppliers",
-//                 style: TextStyle(
-//                     color: Colors.white,
-//                     fontSize: 17,
-//                     fontWeight: FontWeight.bold),
-//               ),
-//               onTap: () {
-//                 Navigator.push(context,
-//                     MaterialPageRoute(builder: (context) => new Suppliers()));
-//               },
-//             ),
-//             Divider(
-//               thickness: 0.5,
-//               color: Colors.white,
-//             ),
-//             ListTile(
-//               leading: Icon(Icons.language, size: 20, color: Colors.white),
-//               title: Text(
-//                 "RFQ",
-//                 style: TextStyle(
-//                     color: Colors.white,
-//                     fontSize: 17,
-//                     fontWeight: FontWeight.bold),
-//               ),
-//               onTap: () {
-//                 Navigator.push(context,
-//                     MaterialPageRoute(builder: (context) => new RFQ()));
-//               },
-//             ),
-//             Divider(
-//               thickness: 0.5,
-//               color: Colors.white,
-//             ),
-//             ListTile(
-//               leading: Icon(Icons.account_circle_rounded,
-//                   size: 20, color: Colors.white),
-//               title: Text(
-//                 "LogIn",
-//                 style: TextStyle(
-//                     color: Colors.white,
-//                     fontSize: 17,
-//                     fontWeight: FontWeight.bold),
-//               ),
-//               onTap: () {
-//                 Navigator.push(context,
-//                     MaterialPageRoute(builder: (context) => new Login()));
-//               },
-//             ),
-//             Divider(
-//               thickness: 0.5,
-//               color: Colors.white,
-//             ),
-//             ListTile(
-//               title: Text(
-//                 "Sell on sasto wholsale",
-//                 style: TextStyle(
-//                     color: Colors.white,
-//                     fontSize: 17,
-//                     fontWeight: FontWeight.bold),
-//               ),
-//             ),
-//             Divider(
-//               thickness: 0.5,
-//               color: Colors.white,
-//             ),
-//           ],
-//         ),
-//       ),
-//     ),
-//   );
-// }
 
 Widget _buildSectionTitle(
     String title, Function onTap, IconData icon, String seeAll) {
@@ -832,6 +648,51 @@ Widget _sastoWholesaleMallSection(BuildContext context) {
   );
 }
 
+//Our Blog Section Title
+Widget _blogSectionTitle(BuildContext context) {
+  return Padding(
+    padding: EdgeInsets.symmetric(horizontal: 10),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            Icon(
+              Icons.home_outlined,
+              color: Colors.red,
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            Text(
+              "Blogs",
+              style: TextStyle(
+                  color: Colors.blueGrey,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        InkWell(
+          //onTap: AllBlog,
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => new AllBlog()));
+          },
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "View All Blog",
+              style: TextStyle(
+                  color: Colors.red, fontSize: 17, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
 //Image Slider
 // class SlideIndicator extends AnimatedWidget {
 //   final PageController pageController;
@@ -882,6 +743,7 @@ Widget _sastoWholesaleMallSection(BuildContext context) {
 
 class SlideIndicator extends StatelessWidget {
   final bool isActive;
+
   const SlideIndicator({Key? key, required this.isActive}) : super(key: key);
 
   @override
@@ -890,19 +752,17 @@ class SlideIndicator extends StatelessWidget {
       width: isActive ? 22.0 : 8.0,
       height: 8.0,
       duration: Duration(milliseconds: 200),
-        curve: Curves.fastLinearToSlowEaseIn,
-        decoration: BoxDecoration(
-          color: isActive ? Colors.lightBlueAccent : Colors.blueGrey,
-                border: Border.all(
-                    //color: active ? Colors.red : Colors.white
-                    color: Colors.white),
-                borderRadius: BorderRadius.circular(0.0),
-    ),
-
+      curve: Curves.fastLinearToSlowEaseIn,
+      decoration: BoxDecoration(
+        color: isActive ? Colors.lightBlueAccent : Colors.blueGrey,
+        border: Border.all(
+            //color: active ? Colors.red : Colors.white
+            color: Colors.white),
+        borderRadius: BorderRadius.circular(0.0),
+      ),
     );
   }
 }
-
 
 // class addBannerImage extends StatefulWidget {
 //   final String slideImage;
@@ -928,18 +788,14 @@ class SlideIndicator extends StatelessWidget {
 //   }
 // }
 
-
 Future<List<SliderData>> fetchBannerImage() async {
-  final response = await http.get(Uri.parse(
-      'https://seller.sastowholesale.com/api/sliders'));
+  final response = await http
+      .get(Uri.parse('https://seller.sastowholesale.com/api/sliders'));
   if (response.statusCode == 200) {
     List jsonResponse = json.decode(response.body)['data'];
     print("${response.body}");
-    return jsonResponse
-        .map((data) => new SliderData.fromJson(data))
-        .toList();
+    return jsonResponse.map((data) => new SliderData.fromJson(data)).toList();
   } else {
     throw Exception('Failed to load Top Product Data');
   }
 }
-

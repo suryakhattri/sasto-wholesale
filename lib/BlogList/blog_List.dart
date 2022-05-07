@@ -57,117 +57,108 @@ class _BlogListState extends State<BlogList> {
           scrollDirection: Axis.horizontal,
           itemCount: _items.length,
           itemBuilder: (context, index) {
-            return InkWell(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                        new AllBlog()));
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Material(
-                  elevation: 5,
-                  borderRadius: BorderRadius.circular(10),
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Container(
-                      height: 300,
-                      width: 300,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            Container(
-                              height: 200,
-                              width: 300,
-                              // color: Colors.blueAccent,
-                              child: Image.asset(
-                                _items[index].url,
-                                // height: constraints.maxHeight * 0.6,
-                                fit: BoxFit.fill,
+            return Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Material(
+                elevation: 5,
+                borderRadius: BorderRadius.circular(10),
+                child: Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Container(
+                    height: 300,
+                    width: 300,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 200,
+                            width: 300,
+                            // color: Colors.blueAccent,
+                            child: Image.asset(
+                              _items[index].url,
+                              // height: constraints.maxHeight * 0.6,
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                _items[index].day,
+                                style: TextStyle(
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 25),
                               ),
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Row(
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                _items[index].month,
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 17),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Divider(
+                            thickness: 0.5,
+                            color: Colors.black,
+                            endIndent: 200,
+                          ),
+                          Text(
+                            _items[index].name,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 17),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            _items[index].description,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.normal,
+                                fontSize: 17),
+                            maxLines: 4,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                      new BlogDetailsPage()));
+                            },
+                            child: Row(
+                              //mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  _items[index].day,
+                                  "Read More",
                                   style: TextStyle(
-                                      color: Colors.blue,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 25),
+                                      color: Colors.red,
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.bold),
                                 ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  _items[index].month,
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17),
-                                ),
+                                SizedBox(width: 5,),
+                                Icon(Icons.arrow_forward_ios, size: 20, color: Colors.red,)
                               ],
                             ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Divider(
-                              thickness: 0.5,
-                              color: Colors.black,
-                              endIndent: 200,
-                            ),
-                            Text(
-                              _items[index].name,
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 17),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              _items[index].description,
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: 17),
-                              maxLines: 4,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                        new BlogDetailsPage()));
-                              },
-                              child: Row(
-                                //mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "Read More",
-                                    style: TextStyle(
-                                        color: Colors.red,
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  SizedBox(width: 5,),
-                                  Icon(Icons.arrow_forward_ios, size: 20, color: Colors.red,)
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
+                          )
+                        ],
                       ),
                     ),
                   ),

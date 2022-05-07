@@ -113,9 +113,12 @@ class _ProductsState extends State<Products> {
                                                 decoration: BoxDecoration(
                                                     // color: Colors.deepPurple
                                                     ),
-                                                child: Image.network(
-                                                  _productList[index].imageUrl,
-                                                  fit: BoxFit.fill,
+                                                child: Center(
+                                                  child: Image.network(
+                                                    _productList[index].imageUrl,
+                                                    fit: BoxFit.fitWidth,
+                                                    height: 150,
+                                                  ),
                                                 ),
                                               ),
                                             ),

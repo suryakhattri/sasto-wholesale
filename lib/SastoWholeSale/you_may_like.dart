@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:sasto_wholesale/CategoryDetails/category_details.dart';
 
 import 'Models/you_may_like_model.dart';
 
@@ -43,80 +44,89 @@ class _YouMayLikeState extends State<YouMayLike> {
                           childAspectRatio: 0.65,
                         ),
                         itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.only(
-                                bottom: 10.0, top: 10.0, left: 5.0, right: 5.0),
-                            child: Material(
-                              elevation: 5,
-                              color: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0)),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  //  SizedBox(height: 30.0,),
-                                  Container(
-                                    height: 200,
-                                    width: MediaQuery.of(context).size.width,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(5),
-                                      child: Image.network(
-                                        _newYouMayLike[index].imageUrl,
-                                        fit: BoxFit.fill,
+                          return InkWell(
+                            onTap: (){
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                      new ProductDetailPage(slug: _newYouMayLike[index].slug,)));
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  bottom: 10.0, top: 10.0, left: 5.0, right: 5.0),
+                              child: Material(
+                                elevation: 5,
+                                color: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0)),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    //  SizedBox(height: 30.0,),
+                                    Container(
+                                      height: 170,
+                                      width: MediaQuery.of(context).size.width,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(5),
+                                        child: Image.network(
+                                          _newYouMayLike[index].imageUrl,
+                                          fit: BoxFit.fill,
+                                        ),
                                       ),
                                     ),
-                                  ),
 
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.only(top: 10.0, left: 5.0),
-                                    child: Container(
-                                      // width: 220,
-                                      child: Text(_newYouMayLike[index].title,
-                                          style: TextStyle(
-                                              fontSize: 15.0,
-                                              color: Colors.grey.shade700,
-                                              fontWeight: FontWeight.bold),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis),
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.only(top: 10.0, left: 5.0),
+                                      child: Container(
+                                        // width: 220,
+                                        child: Text(_newYouMayLike[index].title,
+                                            style: TextStyle(
+                                                fontSize: 15.0,
+                                                color: Colors.grey.shade700,
+                                                fontWeight: FontWeight.bold),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis),
+                                      ),
+                                      //child: Text("The bibal is a catholic book",  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),),
                                     ),
-                                    //child: Text("The bibal is a catholic book",  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),),
-                                  ),
-                                  Padding(
-                                    padding:
-                                    EdgeInsets.only(top: 5.0, left: 5.0),
-                                    child: Container(
-                                      // width: 220,
-                                      child: Text(_newYouMayLike[index].priceRange,
-                                          style: TextStyle(
-                                              fontSize: 15.0,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis),
+                                    Padding(
+                                      padding:
+                                      EdgeInsets.only(top: 5.0, left: 5.0),
+                                      child: Container(
+                                        // width: 220,
+                                        child: Text(_newYouMayLike[index].priceRange,
+                                            style: TextStyle(
+                                                fontSize: 15.0,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis),
+                                      ),
+                                      //child: Text("The bibal is a catholic book",  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),),
                                     ),
-                                    //child: Text("The bibal is a catholic book",  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),),
-                                  ),
-                                  Padding(
-                                    padding:
-                                    EdgeInsets.only(top: 5.0, left: 5.0),
-                                    child: Container(
-                                      // width: 220,
-                                      child: Text(_newYouMayLike[index].minOrder,
-                                          style: TextStyle(
-                                              fontSize: 15.0,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.normal),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis),
+                                    Padding(
+                                      padding:
+                                      EdgeInsets.only(top: 5.0, left: 5.0),
+                                      child: Container(
+                                        // width: 220,
+                                        child: Text(_newYouMayLike[index].minOrder,
+                                            style: TextStyle(
+                                                fontSize: 15.0,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.normal),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis),
+                                      ),
+                                      //child: Text("The bibal is a catholic book",  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),),
                                     ),
-                                    //child: Text("The bibal is a catholic book",  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),),
-                                  ),
 
-                                  // SizedBox(
-                                  //   height: 10,
-                                  // ),
-                                ],
+                                    // SizedBox(
+                                    //   height: 10,
+                                    // ),
+                                  ],
+                                ),
                               ),
                             ),
                           );
