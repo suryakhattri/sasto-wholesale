@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+<h1 id="title">Connect Ips</h1>
+
+<form action= "https://login.connectips.com/connectipswebgw/loginpage" method="post">
+    <br>
+    MERCHANT ID
+    <input type="text" name="merchantId" id="MERCHANTID" value="merchantId"/>
+    <br>
+    APP ID
+    <input type="text" name="appId" id="APPID" value="appId"/>
+    <br>
+    APP NAME
+    <input type="text" name="appName" id="APPNAME" value="appName"/>
+    <br>
+    TXN ID
+    <input type="text" name="txn_id" id="TXNID" value="txn_id"/>
+    <br>
+    TXN DATE
+    <input type="text" name="txnDate" id="TXNDATE" value="txnDate"/>
+    <br>
+    TXN CRNCY
+    <input type="text" name="txn_crncy" id="TXNCRNCY" value="txn_crncy"/>
+    <br>
+    TXN AMT
+    <input type="text" name="txn_amt" id="TXNAMT" value="txn_amt"/>
+    <br>
+    REFERENCE ID
+    <input type="text" name="reference_id" id="REFERENCEID" value="reference_id"/>
+    <br>
+    REMARKS
+    <input type="text" name="REMARKS" id="REMARKS" value="RMKS-001"/>
+    <br>
+    PARTICULARS
+    <input type="text" name="particulars" id="PARTICULARS" value="particulars"/>
+    <br>
+    TOKEN
+    <input type="text" name="TOKEN" id="token" value="
+mpqZ3kyEBjhiGKlYMv6OXe4kT8ID5gDr6wRdfd0hAcwlOcKrJn8WHFd5t7V2OCtZrKrEu0BbQeleQbA8kj7
+66PT6J/7eakXFZURn1gedczCovBZq7Hz79lU5KQA58WSCv3sTs3mfY8Qspaz/VbUgHJKNK6thFeNdcs8r
+NWfXFlfJm9V84Wem2wNC5bjwzd8tZPVHa1BHiF+8eBgOEu8vhvs1tW6VUVbOr/U3ZOZNwaG3ZCL0G
+UnwF8qrmSoKexj6DDZLZOKB6xMsbTnQCu6i4nn2uGwSmAS3F3kUt5+cjmd4TLURFrYw0UKAXgKlU3t
+RanhAEN3dOpIisSRaBjwFHQ=="/>
+    <br>
+    <input type="submit" value="Submit">
+</form>
+
+</body>
+
+<script type="text/javascript">
+
+    function requestPayment(url, merchantId, appId, appName, txn_id, txnDate, txn_crncy, txn_amt, reference_id, particulars, token ) {
+        oForm = document.forms['form'];
+        oForm.elements['merchantId'].value = merchantId;
+        oForm.elements['appId'].value = appId;
+        oForm.elements['appName'].value = appName;
+        oForm.elements['txn_id'].value = txn_id;
+        oForm.elements['txnDate'].value = txnDate;
+        oForm.elements['txn_crncy'].value = txn_crncy;
+        oForm.elements['txn_amt'].value = txn_amt;
+        oForm.elements['reference_id'].value = reference_id;
+        oForm.elements['particulars'].value = particulars;
+        oForm.elements['token'].value = token;
+
+        // requestPayment(tAmt = 1000, amt = 200, txAmt = 100, psc = 20, pdc = 10, scd = "EPAYTEST", pid = "1", su = "#", fu = "#");
+    }
+</script>
+
+
+</html>

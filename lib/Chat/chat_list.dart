@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:sasto_wholesale/Chat/chat_details.dart';
 import 'package:sasto_wholesale/Chat/chat_list_model.dart';
+import 'package:sasto_wholesale/Login/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -16,29 +17,21 @@ class ChatList extends StatefulWidget {
 class _ChatListState extends State<ChatList> {
   late Future<ChatListModel> _chatListModel;
 
-  List<ChatUsers> chatUsers = [
-    ChatUsers(
-        name: "Jane Russel",
-        messageText: "Awesome Setup",
-        imageURL: "assets/images/men.jpeg",
-        time: "Now"),
-    ChatUsers(
-        name: "Glady's Murphy",
-        messageText: "That's Great",
-        imageURL: "assets/images/beauty.jpeg",
-        time: "Yesterday"),
-    ChatUsers(
-        name: "Jorge Henry",
-        messageText: "Hey where are you?",
-        imageURL: "assets/images/jacket.jpeg",
-        time: "31 Mar"),
-  ];
-
   @override
   void initState() {
     super.initState();
-
+    checkLogin();
     _chatListModel = fetchChatList();
+  }
+
+  void checkLogin() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? loginToken = preferences.getString("login_token");
+    if (loginToken == null) {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => Login()), (route) => false);
+      //  Navigator.push(context, MaterialPageRoute(builder: (context) => BottomNavigationDataItems()));
+    }
   }
 
   @override
@@ -74,7 +67,11 @@ class _ChatListState extends State<ChatList> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => new ChatDetails()));
+                                    builder: (context) => new ChatDetails(
+                                          chatData: snapshot.data!.data[index], userId: snapshot.data!.data[index].customerUserId,
+                                      vendorId: snapshot.data!.data[index].vendorUserId,
+
+                                        )));
                           },
                           child: Card(
                             child: Container(
@@ -106,8 +103,10 @@ class _ChatListState extends State<ChatList> {
                                                 Text(
                                                   snapshot.data!.data[index]
                                                       .opponent.name,
-                                                  style:
-                                                      TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                                                  style: TextStyle(
+                                                      fontSize: 17,
+                                                      fontWeight:
+                                                          FontWeight.bold),
                                                 ),
                                                 SizedBox(
                                                   height: 6,
@@ -253,7 +252,7 @@ class _ChatListState extends State<ChatList> {
 //Fetch Api
 Future<ChatListModel> fetchChatList() async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
-  String loginToken = preferences.getString("login_token");
+  String? loginToken = preferences.getString("login_token");
 
   var header = {
     'Content-type': 'application/json',
@@ -269,6 +268,6 @@ Future<ChatListModel> fetchChatList() async {
     print("data: ${jsonResponse}");
     return new ChatListModel.fromJson(jsonResponse);
   } else {
-    throw Exception('Failed to load manage order Item');
+    throw Exception('Failed to load chat list Item');
   }
 }

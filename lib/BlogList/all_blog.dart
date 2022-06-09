@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sasto_wholesale/BlogList/Models/blog_list_model.dart';
 import 'package:sasto_wholesale/BlogList/block_model.dart';
+import 'package:sasto_wholesale/BlogList/blog_List.dart';
 import 'package:sasto_wholesale/BlogList/blog_details_page.dart';
 
 class AllBlog extends StatefulWidget {
@@ -10,40 +12,14 @@ class AllBlog extends StatefulWidget {
 }
 
 class _AllBlogState extends State<AllBlog> {
-  final List<BlockModel> _items = [
-    BlockModel(
-      name: "Do you know wholsale are making profit",
-      url: 'assets/images/blog.jpeg',
-      day: "26",
-      month: "Jan",
-      description:
-          'Quisque consectetur convallis ex, quis tincidunt ligula placerat et. Nam quis leo sed tortor blandit commodo. Quisque ultrices, justo non convallis accumsan, ante magna ornare sapien, quis venenatis diam libero nec orci. Aenean semper interdum odio in dictum. Nunc sed augue lorem.',
-    ),
-    BlockModel(
-      name: "Do you know wholsale are making profit",
-      url: 'assets/images/blog.jpeg',
-      day: "28",
-      month: "march",
-      description:
-          'Quisque consectetur convallis ex, quis tincidunt ligula placerat et. Nam quis leo sed tortor blandit commodo. Quisque ultrices, justo non convallis accumsan, ante magna ornare sapien, quis venenatis diam libero nec orci. Aenean semper interdum odio in dictum. Nunc sed augue lorem.',
-    ),
-    BlockModel(
-      name: "Do you know wholsale are making profit",
-      url: 'assets/images/blog.jpeg',
-      day: "2",
-      month: "Dec",
-      description:
-          'Quisque consectetur convallis ex, quis tincidunt ligula placerat et. Nam quis leo sed tortor blandit commodo. Quisque ultrices, justo non convallis accumsan, ante magna ornare sapien, quis venenatis diam libero nec orci. Aenean semper interdum odio in dictum. Nunc sed augue lorem.',
-    ),
-    BlockModel(
-      name: "Do you know wholsale are making profit",
-      url: 'assets/images/blog.jpeg',
-      day: "26",
-      month: "Feb",
-      description:
-          'Quisque consectetur convallis ex, quis tincidunt ligula placerat et. Nam quis leo sed tortor blandit commodo. Quisque ultrices, justo non convallis accumsan, ante magna ornare sapien, quis venenatis diam libero nec orci. Aenean semper interdum odio in dictum. Nunc sed augue lorem.',
-    ),
-  ];
+  late Future<BlogListModel> _blogListModel;
+
+  @override
+  void initState() {
+    super.initState();
+    _blogListModel = fetchBlogList();
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,134 +46,150 @@ class _AllBlogState extends State<AllBlog> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(0.0),
-        child: Container(
-         //  height: 900,
-          child: ListView.builder(
-            scrollDirection: Axis.vertical,
-            itemCount: _items.length,
-            itemBuilder: (context, index) {
-              return InkWell(
-                onTap: () {
-                  // Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (context) =>
-                  //         new ProductDetailPage()));
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Material(
-                    elevation: 5,
-                    borderRadius: BorderRadius.circular(10),
-                    child: Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            height: 200,
-                            width: MediaQuery.of(context).size.width,
-                            // color: Colors.blueAccent,
-                            child: Image.asset(
-                              _items[index].url,
-                              // height: constraints.maxHeight * 0.6,
-                              fit: BoxFit.fill,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                _items[index].day,
-                                style: TextStyle(
-                                    color: Colors.blue,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 25),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                _items[index].month,
-                                style: TextStyle(
+        child: FutureBuilder<BlogListModel>(
+            future: _blogListModel,
+            builder: (context, snapshot) {
+              if(snapshot.hasData) {
+                return Container(
+                  //  height: 900,
+                  child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    itemCount: snapshot.data!.data.length,
+                    itemBuilder: (context, index) {
+                      return InkWell(
+                        onTap: () {
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) =>
+                          //         new ProductDetailPage()));
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Material(
+                            elevation: 5,
+                            borderRadius: BorderRadius.circular(10),
+                            child: Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    height: 200,
+                                    width: MediaQuery.of(context).size.width,
+                                    // color: Colors.blueAccent,
+                                    child: Image.network(
+                                      snapshot.data!.data[index].imageUrl,
+                                      // height: constraints.maxHeight * 0.6,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        snapshot.data!.data[index].createdAt.day.toString(),
+                                        style: TextStyle(
+                                            color: Colors.blue,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 25),
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text(
+                                        snapshot.data!.data[index].createdAt.month.toString(),
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 17),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Divider(
+                                    thickness: 0.5,
                                     color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 17),
+                                    endIndent: 250,
+                                  ),
+                                  Text(
+                                    snapshot.data!.data[index].title,
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 17),
+                                    textAlign: TextAlign.start,
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    snapshot.data!.data[index].shortDescription,
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 17),
+                                    maxLines: 4,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                              new BlogDetailsPage(slug: snapshot.data!.data[index].slug,)));
+                                    },
+                                    child: Row(
+                                      //mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "Read More",
+                                          style: TextStyle(
+                                              color: Colors.red,
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Icon(
+                                          Icons.arrow_forward_ios,
+                                          size: 20,
+                                          color: Colors.red,
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                ],
                               ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Divider(
-                            thickness: 0.5,
-                            color: Colors.black,
-                            endIndent: 250,
-                          ),
-                          Text(
-                            _items[index].name,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 17),
-                            textAlign: TextAlign.start,
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            _items[index].description,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.normal,
-                                fontSize: 17),
-                            maxLines: 4,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          new BlogDetailsPage()));
-                            },
-                            child: Row(
-                              //mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Read More",
-                                  style: TextStyle(
-                                      color: Colors.red,
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Icon(
-                                  Icons.arrow_forward_ios,
-                                  size: 20,
-                                  color: Colors.red,
-                                )
-                              ],
                             ),
-                          )
-                        ],
-                      ),
-                    ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
+                );
+              } else if (snapshot.hasError) {
+                return Text('${snapshot.error}');
+              }
+              return Center(
+                child: CircularProgressIndicator(
+                  semanticsLabel: "Loading...",
                 ),
               );
-            },
-          ),
-        ),
+
+            }),
       ),
     );
   }
 }
+
+

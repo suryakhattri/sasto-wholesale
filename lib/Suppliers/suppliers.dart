@@ -90,7 +90,7 @@ class _SuppliersState extends State<Suppliers> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              new SastoWholesaleMallAllProduct()));
+                                              new SastoWholesaleMallAllProduct(vendorId: _supplierData[index].id)));
                                 },
                                 child: Material(
                                   elevation: 5,

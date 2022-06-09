@@ -2,19 +2,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
-class ChatUsers{
-  String name;
-  String messageText;
-  String imageURL;
-  String time;
-  ChatUsers({required this.name,required this.messageText,required this.imageURL,required this.time});
-}
-
-class ChatMessage{
-  String messageContent;
-  String messageType;
-  ChatMessage({required this.messageContent, required this.messageType});
-}
+// class ChatUsers{
+//   String name;
+//   String messageText;
+//   String imageURL;
+//   String time;
+//   ChatUsers({required this.name,required this.messageText,required this.imageURL,required this.time});
+// }
+//
+// class ChatMessage{
+//   String messageContent;
+//   String messageType;
+//   ChatMessage({required this.messageContent, required this.messageType});
+// }
 
 
 // To parse this JSON data, do
@@ -32,12 +32,12 @@ class ChatListModel {
     required this.meta,
   });
 
-  List<Datum> data;
+  List<ChatData> data;
   Links links;
   Meta meta;
 
   factory ChatListModel.fromJson(Map<String, dynamic> json) => ChatListModel(
-    data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+    data: List<ChatData>.from(json["data"].map((x) => ChatData.fromJson(x))),
     links: Links.fromJson(json["links"]),
     meta: Meta.fromJson(json["meta"]),
   );
@@ -49,8 +49,8 @@ class ChatListModel {
   };
 }
 
-class Datum {
-  Datum({
+class ChatData {
+  ChatData({
     required this.id,
     required this.customerUserId,
     required this.vendorUserId,
@@ -70,7 +70,7 @@ class Datum {
   dynamic hasUnseenMessages;
   dynamic lastMessageId;
 
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+  factory ChatData.fromJson(Map<String, dynamic> json) => ChatData(
     id: json["id"],
     customerUserId: json["customer_user_id"],
     vendorUserId: json["vendor_user_id"],

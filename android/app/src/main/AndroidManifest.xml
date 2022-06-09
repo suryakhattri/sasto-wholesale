@@ -2,8 +2,9 @@
     package="com.sastoWholesale.sasto_wholesale">
     <uses-permission android:name="android.permission.INTERNET" />
     <application
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/app_icon"
         android:label="sasto_wholesale"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:requestLegacyExternalStorage="true">
         <activity
             android:name=".MainActivity"
@@ -38,6 +39,4 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
-    s
-    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

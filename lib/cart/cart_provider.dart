@@ -4,13 +4,31 @@ import 'package:sasto_wholesale/DBHelper/db_helper.dart';
 import 'package:sasto_wholesale/cart/cart_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ReviewCartProvider extends ChangeNotifier {
+//Cart Notifier
+class CartItemProvider with ChangeNotifier {
+  DBHelper? dbHelper = DBHelper();
 
-  DBHelper dbHelper = DBHelper();
+  Map<String, CartModel> _items = {};
 
-  List<CartModel> myCartItemsList = [];
-  int productCount = 0;
-  double total = 0;
+  Map<String, CartModel> get items {
+    return {..._items};
+  }
+
+  int get itemCount {
+    return _items.length;
+  }
+
+  // List<CartModel> myCartItemsList = [];
+
+  late Future<List<CartModel>?> _cartList;
+
+  Future<List<CartModel>?> get cartModel => _cartList;
+
+  Future<List<CartModel>?> getData() async {
+    _cartList = dbHelper!.getCartList();
+    notifyListeners();
+    return _cartList;
+  }
 
   int _counter = 0;
 
@@ -19,15 +37,6 @@ class ReviewCartProvider extends ChangeNotifier {
   double _totalPrice = 0.0;
 
   double get totalPrice => _totalPrice;
-
-  late Future<List<CartModel>> _cartList;
-
-  Future<List<CartModel>> get cartModel => _cartList ;
-
-  Future<List<CartModel>> getData() async {
-    _cartList = dbHelper.getCartList();
-    return _cartList;
-  }
 
   void _setPrefItems() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -39,32 +48,6 @@ class ReviewCartProvider extends ChangeNotifier {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     _counter = preferences.getInt('cart_item') ?? 0;
     _totalPrice = preferences.getDouble('total_price') ?? 0.0;
-  }
-
-  // double cartValue = 0;
-
-  addToCart(CartModel data) {
-    myCartItemsList.add(data);
-    // cartValue += data.price;
-    notifyListeners();
-    print("added To cart");
-  }
-
-  void removeCart(int index) {
-    myCartItemsList.removeAt(index);
-    if (productCount != 0) {
-      productCount--;
-    }
-    calculatePrice();
-    notifyListeners();
-  }
-
-  void calculatePrice() {
-    total = 0;
-    myCartItemsList.forEach((element) {
-      total += element.productPrice * element.quantity;
-    });
-    notifyListeners();
   }
 
   //Counter increase decrease
@@ -82,6 +65,7 @@ class ReviewCartProvider extends ChangeNotifier {
 
   int getCounter() {
     _getPrefItems();
+    notifyListeners();
     return _counter;
   }
 
@@ -103,5 +87,58 @@ class ReviewCartProvider extends ChangeNotifier {
     return _totalPrice;
   }
 
-
+  void addItem(int id, String vendorId, String name, String imageUrl,
+      String price, int quantity, String totalPrice, String shippingCharge) {
+    dbHelper?.insert(CartModel(
+        id: id,
+        name: name,
+        imageUrl: imageUrl,
+        price: price,
+        quantity: quantity,
+        totalPrice: totalPrice,
+        shippingCharge: shippingCharge,
+        vendorId: vendorId));
+    addCounter();
+    notifyListeners();
+    // if (_items.containsKey(vendorId)) {
+    //   dbHelper?.insert(CartModel(
+    //       id: id,
+    //       name: name,
+    //       imageUrl: imageUrl,
+    //       price: price,
+    //       quantity: quantity,
+    //       totalPrice: totalPrice,
+    //       shippingCharge: shippingCharge,
+    //       vendorId: vendorId));
+    //   addCounter();
+    //   notifyListeners();
+      // addTotalPrice(double.parse(totalPrice.toString()));
+      // _items.update(
+      //     vendorId,
+      //     (existingCartItem) => CartModel(
+      //         id: existingCartItem.id,
+      //         name: existingCartItem.name,
+      //         imageUrl: existingCartItem.imageUrl,
+      //         price: existingCartItem.price,
+      //         quantity: existingCartItem.quantity,
+      //         totalPrice: existingCartItem.totalPrice,
+      //         vendorId: vendorId,
+      //         shippingCharge: existingCartItem.shippingCharge));
+    // } else {
+    //   _items.putIfAbsent(
+    //     vendorId,
+    //     () => CartModel(
+    //       id: id,
+    //       name: name,
+    //       imageUrl: imageUrl,
+    //       price: price,
+    //       quantity: quantity,
+    //       shippingCharge: shippingCharge,
+    //       totalPrice: totalPrice,
+    //       vendorId: vendorId,
+    //     ),
+    //   );
+    // }
+   // notifyListeners();
+  }
 }

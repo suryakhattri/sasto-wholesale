@@ -9,6 +9,7 @@ import 'package:sasto_wholesale/Products/products_list.dart';
 import 'package:sasto_wholesale/Profile/Model/profile_model.dart';
 import 'package:sasto_wholesale/Profile/Order/edit_prfile.dart';
 import 'package:sasto_wholesale/Profile/change_password.dart';
+import 'package:sasto_wholesale/Search/search_product_list.dart';
 import 'package:sasto_wholesale/Suppliers/suppliers.dart';
 import 'package:sasto_wholesale/notification.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,7 +18,7 @@ class UserProfile extends StatefulWidget {
   const UserProfile({Key? key}) : super(key: key);
 
   @override
-  _UserProfileState createState() => _UserProfileState( title: "");
+  _UserProfileState createState() => _UserProfileState(title: "");
 }
 
 class _UserProfileState extends State<UserProfile> {
@@ -31,16 +32,24 @@ class _UserProfileState extends State<UserProfile> {
   @override
   void initState() {
     super.initState();
+    checkLogin();
     _profileData = fetchProfileData();
+  }
+
+  void checkLogin() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String loginToken = preferences.getString("login_token");
+    if (loginToken == null) {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => Login()),
+              (route) => false);
+      //  Navigator.push(context, MaterialPageRoute(builder: (context) => BottomNavigationDataItems()));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-
     final addressData = [
-      _UserProfileState(
-        title: "My Favourites",
-      ),
       _UserProfileState(
         title: "Edit Profile",
       ),
@@ -56,12 +65,9 @@ class _UserProfileState extends State<UserProfile> {
       _UserProfileState(
         title: "My Deals",
       ),
-      _UserProfileState(
-        title: "Notifications",
-      ),
-      _UserProfileState(
-        title: "Help Center",
-      ),
+      // _UserProfileState(
+      //   title: "Help Center",
+      // ),
       _UserProfileState(
         title: "Log out",
       ),
@@ -81,6 +87,23 @@ class _UserProfileState extends State<UserProfile> {
           "assets/images/logo.png",
           scale: 8,
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 10.0),
+            child: IconButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => new SearchProductList()));
+                },
+                icon: Icon(
+                  Icons.search,
+                  color: Colors.blue,
+                  size: 30,
+                )),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -89,7 +112,7 @@ class _UserProfileState extends State<UserProfile> {
             _profile(),
             _addressBook(addressData),
             //_buttons(),
-           // _orderDetails(),
+            // _orderDetails(),
           ],
         ),
       ),
@@ -108,7 +131,10 @@ class _UserProfileState extends State<UserProfile> {
               elevation: 3,
               borderRadius: BorderRadius.circular(10),
               child: Container(
-                width: MediaQuery.of(context).size.width,
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   //mainAxisAlignment: MainAxisAlignment.center,
@@ -293,7 +319,6 @@ class _UserProfileState extends State<UserProfile> {
             ));
       },
     );
-
   }
 
   Widget _addressBook(addressData) {
@@ -303,73 +328,78 @@ class _UserProfileState extends State<UserProfile> {
           child: ListView.builder(
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-             // itemExtent: 70,
+              // itemExtent: 70,
               itemCount: addressData.length,
               itemBuilder: (context, index) {
                 return Padding(
-                  padding: const EdgeInsets.only(top: 5.0, left: 10, right: 10,),
+                  padding: const EdgeInsets.only(
+                    top: 5.0, left: 10, right: 10,),
                   child: Material(
                     elevation: 3,
                     borderRadius: BorderRadius.circular(10),
                     child: ListTile(
-                      onTap: () async{
-                        if(index == 0) {
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => new ManageOrder()));
-                        } else if(index == 1){
+                        onTap: () async {
+                          // if(index == 0) {
+                          //   // Navigator.push(
+                          //   //     context,
+                          //   //     MaterialPageRoute(
+                          //   //         builder: (context) => new ManageOrder()));
+                          // }
+                           if(index == 0){
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => new EditProfile()));
-                        } else if(index == 2) {
+                          context,
+                          MaterialPageRoute(
+                          builder: (context) => new EditProfile()));
+                          } else if(index == 1) {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => new Products()));
-                        } else if(index == 3 ) {
+                          context,
+                          MaterialPageRoute(
+                          builder: (context) => new Products()));
+                          } else if(index == 2 ) {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => new Suppliers()));
-                        } else if(index == 4) {
+                          context,
+                          MaterialPageRoute(
+                          builder: (context) => new Suppliers()));
+                          } else if(index == 3) {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => new MyOrder()));
-                        } else if(index == 5) {
+                          context,
+                          MaterialPageRoute(
+                          builder: (context) => new MyOrder()));
+                          } else if(index == 4) {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => new MyDeals()));
-                        }else if(index == 6) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => new NotificationPage()));
-                        } else if(index == 8) {
+                          context,
+                          MaterialPageRoute(
+                          builder: (context) => new MyDeals()));
+                          }
+                          // else if(index == 6) {
+                          //   Navigator.push(
+                          //       context,
+                          //       MaterialPageRoute(
+                          //           builder: (context) => new NotificationPage()));
+                          // }
+                          else if(index == 5) {
                           SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                           await sharedPreferences.clear();
                           Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(builder: (context) => Login()),
-                                  (route) => false);
-                          } else if(index == 9) {
+                          MaterialPageRoute(builder: (context) => Login()),
+                          (route) => false);
+                          } else if(index == 6) {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => new ChangePassword()));
-                        }
+                          context,
+                          MaterialPageRoute(
+                          builder: (context) => new ChangePassword()));
+                          }
                         },
-
-                      leading: Text(
-                        addressData[index].title,
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 17),
-                      ),
-                      trailing: Icon(Icons.arrow_forward_ios_outlined, size: 20,color: Colors.black,)
+                        leading: Text(
+                          addressData[index].title,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 17),
+                        ),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios_outlined, size: 20,
+                          color: Colors.black,)
                     ),
                   ),
                 );
@@ -377,112 +407,110 @@ class _UserProfileState extends State<UserProfile> {
     );
   }
 
-  // Widget _buttons() {
-  //   return Padding(
-  //     padding: const EdgeInsets.all(10.0),
-  //     child: Material(
-  //       elevation: 5,
-  //       color: Colors.white,
-  //       borderRadius: BorderRadius.circular(10),
-  //       child: Padding(
-  //         padding: const EdgeInsets.only(left: 40.0, right: 40.0),
-  //         child: Row(
-  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //           children: [
-  //             RaisedButton(
-  //               elevation: 0,
-  //               color: Colors.red,
-  //               focusElevation: 4,
-  //               hoverElevation: 4,
-  //               highlightElevation: 8,
-  //               disabledElevation: 0,
-  //               onPressed: () {
-  //                 Navigator.push(
-  //                     context,
-  //                     MaterialPageRoute(
-  //                         builder: (context) => new ManageOrder()));
-  //               },
-  //               child: Text(
-  //                 'Order',
-  //                 style: TextStyle(
-  //                     color: Colors.white,
-  //                     fontWeight: FontWeight.bold,
-  //                     fontSize: 17),
-  //               ),
-  //             ),
-  //             RaisedButton(
-  //               elevation: 0,
-  //               color: Colors.red,
-  //               focusElevation: 4,
-  //               hoverElevation: 4,
-  //               highlightElevation: 8,
-  //               disabledElevation: 0,
-  //               onPressed: () {
-  //                 // Navigator.push(
-  //                 //     context,
-  //                 //     MaterialPageRoute(
-  //                 //         builder: (context) => new ManageOrder()));
-  //               },
-  //               child: Text(
-  //                 'Reviews',
-  //                 style: TextStyle(
-  //                     color: Colors.white,
-  //                     fontWeight: FontWeight.bold,
-  //                     fontSize: 17),
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
+// Widget _buttons() {
+//   return Padding(
+//     padding: const EdgeInsets.all(10.0),
+//     child: Material(
+//       elevation: 5,
+//       color: Colors.white,
+//       borderRadius: BorderRadius.circular(10),
+//       child: Padding(
+//         padding: const EdgeInsets.only(left: 40.0, right: 40.0),
+//         child: Row(
+//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//           children: [
+//             RaisedButton(
+//               elevation: 0,
+//               color: Colors.red,
+//               focusElevation: 4,
+//               hoverElevation: 4,
+//               highlightElevation: 8,
+//               disabledElevation: 0,
+//               onPressed: () {
+//                 Navigator.push(
+//                     context,
+//                     MaterialPageRoute(
+//                         builder: (context) => new ManageOrder()));
+//               },
+//               child: Text(
+//                 'Order',
+//                 style: TextStyle(
+//                     color: Colors.white,
+//                     fontWeight: FontWeight.bold,
+//                     fontSize: 17),
+//               ),
+//             ),
+//             RaisedButton(
+//               elevation: 0,
+//               color: Colors.red,
+//               focusElevation: 4,
+//               hoverElevation: 4,
+//               highlightElevation: 8,
+//               disabledElevation: 0,
+//               onPressed: () {
+//                 // Navigator.push(
+//                 //     context,
+//                 //     MaterialPageRoute(
+//                 //         builder: (context) => new ManageOrder()));
+//               },
+//               child: Text(
+//                 'Reviews',
+//                 style: TextStyle(
+//                     color: Colors.white,
+//                     fontWeight: FontWeight.bold,
+//                     fontSize: 17),
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     ),
+//   );
+// }
 
 
-
-  // Widget _orderDetails() {
-  //   return Padding(
-  //     padding: const EdgeInsets.all(10.0),
-  //     child: Material(
-  //       elevation: 5,
-  //       color: Colors.white,
-  //       borderRadius: BorderRadius.circular(10),
-  //       child: Container(
-  //         child: Column(
-  //           // crossAxisAlignment: CrossAxisAlignment.center,
-  //           children: [
-  //             Padding(
-  //               padding: const EdgeInsets.only(top: 15.0),
-  //               child: Text(
-  //                 "Order Details",
-  //                 style: TextStyle(
-  //                     color: Colors.black,
-  //                     fontWeight: FontWeight.bold,
-  //                     fontSize: 20),
-  //               ),
-  //             ),
-  //             Divider(
-  //               endIndent: 15,
-  //               indent: 15,
-  //               thickness: 0.5,
-  //               color: Colors.black,
-  //             ),
-  //             Padding(
-  //               padding: const EdgeInsets.all(10.0),
-  //               child: Container(
-  //                   height: MediaQuery.of(context).size.height,
-  //                   child: ProfileOrder()),
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
+// Widget _orderDetails() {
+//   return Padding(
+//     padding: const EdgeInsets.all(10.0),
+//     child: Material(
+//       elevation: 5,
+//       color: Colors.white,
+//       borderRadius: BorderRadius.circular(10),
+//       child: Container(
+//         child: Column(
+//           // crossAxisAlignment: CrossAxisAlignment.center,
+//           children: [
+//             Padding(
+//               padding: const EdgeInsets.only(top: 15.0),
+//               child: Text(
+//                 "Order Details",
+//                 style: TextStyle(
+//                     color: Colors.black,
+//                     fontWeight: FontWeight.bold,
+//                     fontSize: 20),
+//               ),
+//             ),
+//             Divider(
+//               endIndent: 15,
+//               indent: 15,
+//               thickness: 0.5,
+//               color: Colors.black,
+//             ),
+//             Padding(
+//               padding: const EdgeInsets.all(10.0),
+//               child: Container(
+//                   height: MediaQuery.of(context).size.height,
+//                   child: ProfileOrder()),
+//             ),
+//           ],
+//         ),
+//       ),
+//     ),
+//   );
+// }
 }
 
 Future<ProfileModel> fetchProfileData() async {
-
   SharedPreferences preferences = await SharedPreferences.getInstance();
   String loginToken = preferences.getString("login_token");
   int userId = preferences.getInt("userId");
@@ -492,11 +520,12 @@ Future<ProfileModel> fetchProfileData() async {
     'Authorization': 'Bearer $loginToken'};
 
   var url = 'https://seller.sastowholesale.com/api/user/show-user-image/';
-  final response = await http.get(Uri.parse(url + userId.toString()), headers: header);
+  final response = await http.get(
+      Uri.parse(url + userId.toString()), headers: header);
   if (response.statusCode == 200) {
     var jsonResponse = json.decode(response.body);
     print("${response.body}");
-    return  new ProfileModel.fromJson(jsonResponse);
+    return new ProfileModel.fromJson(jsonResponse);
   } else {
     throw Exception('Failed to load Profile');
   }

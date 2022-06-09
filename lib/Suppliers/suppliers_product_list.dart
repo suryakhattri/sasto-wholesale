@@ -9,6 +9,7 @@ class SuppliersProductList extends StatefulWidget {
 }
 
 class _SuppliersProductListState extends State<SuppliersProductList> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

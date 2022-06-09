@@ -15,12 +15,12 @@ class CaegoryDetailModel {
     required this.data,
   });
 
-  Data data;
+  Datum data;
   //Data getById(int id) => data.;
 
 
   factory CaegoryDetailModel.fromJson(Map<String, dynamic> json) => CaegoryDetailModel(
-    data: Data.fromJson(json["data"]),
+    data: Datum.fromJson(json["data"]),
   );
 
   Map<String, dynamic> toJson() => {
@@ -28,8 +28,8 @@ class CaegoryDetailModel {
   };
 }
 
-class Data {
-  Data({
+class Datum {
+  Datum({
     required this.id,
     required this.title,
     required this.slug,
@@ -106,7 +106,7 @@ class Data {
   Overview overview;
 
 
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
+  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
     id: json["id"],
     title: json["title"],
     slug: json["slug"],

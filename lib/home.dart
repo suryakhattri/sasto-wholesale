@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:sasto_wholesale/BlogList/all_blog.dart';
@@ -9,14 +10,18 @@ import 'package:sasto_wholesale/Country/country.dart';
 import 'package:sasto_wholesale/Footer/footer_page.dart';
 import 'package:sasto_wholesale/NewArrivals/new_arrival_all_products.dart';
 import 'package:sasto_wholesale/OurPartners/our_partners.dart';
+import 'package:sasto_wholesale/OurPartners/partners.dart';
 import 'package:sasto_wholesale/OurServices/our_services.dart';
+import 'package:sasto_wholesale/Products/products_list.dart';
 import 'package:sasto_wholesale/RequestQuotation/request_quotation.dart';
+import 'package:sasto_wholesale/SastoWholeSale/Models/top_product_model.dart';
 import 'package:sasto_wholesale/SastoWholeSale/hot_category.dart';
 import 'package:sasto_wholesale/SastoWholeSale/new_arrivals.dart';
 import 'package:sasto_wholesale/SastoWholeSale/sasto_wholesale_mall.dart';
 import 'package:sasto_wholesale/SastoWholeSale/top_products.dart';
 import 'package:sasto_wholesale/SastoWholeSale/you_may_like.dart';
 import 'package:sasto_wholesale/SastoWholesaleMall/sasto_wholesale_mall_all_product.dart';
+import 'package:sasto_wholesale/Search/search_product_list.dart';
 import 'package:sasto_wholesale/TopProducts/slider_model.dart';
 import 'package:sasto_wholesale/TopProducts/top_product_all_item.dart';
 
@@ -33,8 +38,7 @@ class _HomeState extends State<Home> {
   final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
 
   PageController pageController = PageController();
-  var _selectedIndex = 0;
-  final List<int> numbers = [1, 2, 3, 5, 8, 13, 21, 34, 55];
+  int _currentIndex = 0;
 
   late Future<List<SliderData>> _sliderData;
 
@@ -42,20 +46,6 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     _sliderData = fetchBannerImage();
-
-    // Timer.periodic(Duration(seconds: 5), (timer) {
-    //   // double nextPage = pageController.page + 1;
-    //
-    //   if (pageController.page! >= pageCount - 1) {
-    //     pageController.animateToPage(0,
-    //         duration: Duration(milliseconds: 2000),
-    //         curve: Curves.fastLinearToSlowEaseIn);
-    //   } else {
-    //     pageController.nextPage(
-    //         duration: Duration(milliseconds: 2000),
-    //         curve: Curves.fastLinearToSlowEaseIn);
-    //   }
-    // });
   }
 
   Widget build(BuildContext context) {
@@ -63,23 +53,16 @@ class _HomeState extends State<Home> {
       key: _scaffoldState,
       appBar: AppBar(
         // leading: Icon(Icons.menu),
+
         automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
         //elevation: 0.0,
         toolbarHeight: 70,
         title: Center(
           child: Row(
+            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 20.0),
-                child: Text(
-                  "Welcome to",
-                  style: TextStyle(
-                      color: Colors.blue,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
               SizedBox(
                 width: 10,
               ),
@@ -90,28 +73,31 @@ class _HomeState extends State<Home> {
             ],
           ),
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 10.0),
+            child: IconButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => new SearchProductList()));
+                },
+                icon: Icon(
+                  Icons.search,
+                  color: Colors.blue,
+                  size: 30,
+                )),
+          )
+        ],
       ),
-      // leading: Builder(
-      //   builder: (BuildContext context) {
-      //     return IconButton(
-      //       icon: Icon(
-      //         Icons.menu_rounded,
-      //         color: Colors.black,
-      //       ),
-      //       onPressed: () {
-      //         Scaffold.of(context).openDrawer();
-      //         //  _scaffoldState.currentState.openDrawer();
-      //       },
-      //       // tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-      //     );
-      //   },
-      // ),
-      //drawer: _drawerHome(context),
+
+      // drawer: _drawerHome(context),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
           children: [
-            _getSearchBar(),
+            // _getSearchBar(),
             _slideImage(),
             SizedBox(
               height: 10,
@@ -205,7 +191,7 @@ class _HomeState extends State<Home> {
             SizedBox(
               height: 10,
             ),
-            _buildSectionTitle("Our Partners", () {}, Icons.accessible, ""),
+            _ourPartnerSection(context),
             SizedBox(
               height: 10,
             ),
@@ -226,200 +212,127 @@ class _HomeState extends State<Home> {
     );
   }
 
-  // Search Field
-
-  _getSearchBar() {
-    return GestureDetector(
-      child: Padding(
-        padding:
-            const EdgeInsets.only(left: 15.0, right: 15.0, top: 15, bottom: 5),
-        child: Material(
-          borderRadius: BorderRadius.all(Radius.circular(32.0)),
-          elevation: 5,
-          child: TextField(
-            onChanged: (value) {
-              //Do something with the user input.
-            },
-            decoration: InputDecoration(
-              hintText: 'Search for desired product here',
-              hintStyle: TextStyle(color: Colors.grey),
-              suffixIcon: Icon(
-                Icons.search,
-                color: Colors.grey,
-              ),
-              contentPadding:
-                  EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(32.0)),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.white, width: 1.0),
-                borderRadius: BorderRadius.all(Radius.circular(32.0)),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.white, width: 1.0),
-                borderRadius: BorderRadius.all(Radius.circular(32.0)),
-              ),
-            ),
-          ),
-        ),
-      ),
-      onTap: () async {
-        // await Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //       builder: (context) => Search(
-        //         updateHome: widget.updateHome,
-        //       ),
-        //     ));
-        if (mounted) setState(() {});
-      },
-    );
-  }
-
   //Slide Image Indicator
   _slideImage() {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 15.0, right: 15, top: 10),
-          child: LimitedBox(
-            maxHeight: 220,
-            child: Stack(
-              children: <Widget>[
-                FutureBuilder<List<SliderData>>(
-                  future: _sliderData,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      List<SliderData> _sliderData = snapshot.data!;
-                      return Column(
-                        children: [
-                          Container(
-                            height: 200,
-                            child: PageView.builder(
-                              onPageChanged: (index) {
-                                _selectedIndex = index;
+        Stack(
+          children: <Widget>[
+            FutureBuilder<List<SliderData>>(
+              future: _sliderData,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  List<SliderData> _sliderData = snapshot.data!;
+                  return Column(
+                    children: [
+                      CarouselSlider(
+                        options: CarouselOptions(
+                          autoPlay: true,
+                          enlargeStrategy: CenterPageEnlargeStrategy.height,
+                          enlargeCenterPage: true,
+                          autoPlayCurve: Curves.easeInCubic,
+                          viewportFraction: 1,
+                          autoPlayInterval: Duration(seconds: 7),
+                          autoPlayAnimationDuration: Duration(milliseconds: 800),
+
+                          //scrollDirection: Axis.vertical,
+                          onPageChanged: (index, reason) {
+                            setState(
+                                  () {
+                                _currentIndex = index;
                               },
-                              controller: pageController,
-                              itemCount: _sliderData.length,
-                              itemBuilder: (context, index) {
-                                var banner = _sliderData[index];
-                                var _scale =
-                                    _selectedIndex == index ? 1.0 : 0.8;
-                                return TweenAnimationBuilder(
-                                  tween: Tween(begin: _scale, end: _scale),
-                                  duration: const Duration(milliseconds: 350),
-                                  builder: (context, double value, child) {
-                                    return Transform.scale(
-                                      scale: value,
-                                      child: child,
-                                    );
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      image: DecorationImage(
-                                          image: NetworkImage(
-                                              _sliderData[index].imageUrl),
-                                          fit: BoxFit.cover),
+                            );
+                          },
+                        ),
+                        items: _sliderData
+                            .map(
+                              (item) =>
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Card(
+                                  margin: EdgeInsets.only(
+                                    // top: 10.0,
+                                    // bottom: 10.0,
+                                  ),
+                                  elevation: 6.0,
+                                  shadowColor: Colors.blueAccent,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(15.0),
                                     ),
-                                    child: DefaultTextStyle(
-                                      style: TextStyle(color: Colors.white),
-                                      child: Stack(
-                                        children: [
-                                          Container(
-                                            decoration: BoxDecoration(
-                                              color:
-                                                  Color.fromRGBO(0, 0, 0, 0.3),
+                                    child: Stack(
+                                      children: <Widget>[
+                                        Image.network(
+                                          item.imageUrl,
+                                          fit: BoxFit.cover,
+                                          width: double.infinity,
+                                        ),
+                                        Center(
+                                          child: _sliderData[_currentIndex]
+                                              .title != null ? Text(
+                                            '${_sliderData[_currentIndex]
+                                                .title}',
+                                            style: TextStyle(
+                                              fontSize: 24.0,
+                                              fontWeight: FontWeight.bold,
+                                              // backgroundColor: Colors.black45,
+                                              color: Colors.white,
                                             ),
-                                          ),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              // Text(_sliderData[index].title)
-                                            ],
-                                          ),
-                                        ],
-                                      ),
+                                          ) : Text(""),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                );
-                              },
-                              // children: <Widget>[
-                              //   addBannerImage(
-                              //     slideImage: "assets/images/2.jpeg"
-                              //   ),
-                              //   addBannerImage(
-                              //     slideImage: "assets/images/2.jpeg",
-                              //   ),
-                              //   addBannerImage(
-                              //     slideImage: "assets/images/3.jpeg",
-                              //   ),
-                              // ],
+                                ),
+                              ),
+                        )
+                            .toList(),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: _sliderData.map((urlOfItem) {
+                          int index = _sliderData.indexOf(urlOfItem);
+                          return Container(
+                            width: 10.0,
+                            height: 10.0,
+                            margin: EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 2.0),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: _currentIndex == index
+                                  ? Color.fromRGBO(29, 124, 201, 1)
+                                  : Color.fromRGBO(0, 0, 0, 0.3),
                             ),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Expanded(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              // crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                ...List.generate(
-                                    _sliderData.length,
-                                    (index) => SlideIndicator(
-                                          isActive: _selectedIndex == index
-                                              ? true
-                                              : false,
-                                        )),
-                              ],
-                            ),
-                          ),
-                        ],
-                      );
-                    } else if (snapshot.hasError) {
-                      return Text('${snapshot.error}');
-                    }
-                    return Container(
-                        alignment: Alignment.center,
-                        margin: EdgeInsets.only(top: 20),
-                        child: CircularProgressIndicator(
-                            // backgroundColor: Colors.grey,
-                            //color: Colors.purple,
-                            // valueColor: ,
-                            ));
-                  },
-                ),
-              ],
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('${snapshot.error}');
+                }
+                return Container(
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.only(top: 20),
+                    child: CircularProgressIndicator(
+                      // backgroundColor: Colors.grey,
+                      //color: Colors.purple,
+                      // valueColor: ,
+                    ));
+              },
             ),
-          ),
+          ],
         ),
-        SizedBox(
-          height: 5,
-        ),
-        // Container(
-        //   height: 10,
-        //   child: Stack(
-        //     children: [
-        //       Positioned(
-        //           left: 0.0,
-        //           right: 0.0,
-        //           child: Center(
-        //               child: SlideIndicator(pageController: pageController))),
-        //     ],
-        //   ),
-        // ),
       ],
     );
   }
 }
 
-Widget _buildSectionTitle(
-    String title, Function onTap, IconData icon, String seeAll) {
+Widget _buildSectionTitle(String title, Function onTap, IconData icon,
+    String seeAll) {
   return Padding(
     padding: EdgeInsets.symmetric(horizontal: 10),
     child: Row(
@@ -460,7 +373,7 @@ Widget _buildSectionTitle(
   );
 }
 
-//New Arrival Section Title
+//Our Partner title
 Widget _newArrivalSection(BuildContext context) {
   return Padding(
     padding: EdgeInsets.symmetric(horizontal: 10),
@@ -492,6 +405,51 @@ Widget _newArrivalSection(BuildContext context) {
                 context,
                 MaterialPageRoute(
                     builder: (context) => new NewArrivalAllProducts()));
+          },
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "See All",
+              style: TextStyle(
+                  color: Colors.red, fontSize: 17, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+//New Arrival Section Title
+Widget _ourPartnerSection(BuildContext context) {
+  return Padding(
+    padding: EdgeInsets.symmetric(horizontal: 10),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            Icon(
+              Icons.home_outlined,
+              color: Colors.red,
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            Text(
+              "Our Partners",
+              style: TextStyle(
+                  color: Colors.blueGrey,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        InkWell(
+          //onTap: AllBlog,
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => new Partners()));
           },
           child: Align(
             alignment: Alignment.centerLeft,
@@ -629,10 +587,10 @@ Widget _sastoWholesaleMallSection(BuildContext context) {
         InkWell(
           //onTap: AllBlog,
           onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => new SastoWholesaleMallAllProduct()));
+            // Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //         builder: (context) => new SastoWholesaleMallAllProduct()));
           },
           child: Align(
             alignment: Alignment.centerLeft,
@@ -692,101 +650,6 @@ Widget _blogSectionTitle(BuildContext context) {
     ),
   );
 }
-
-//Image Slider
-// class SlideIndicator extends AnimatedWidget {
-//   final PageController pageController;
-//
-//   SlideIndicator({required this.pageController})
-//       : super(listenable: pageController);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       child: Row(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         children: List<Widget>.generate(3, buildIndicator),
-//       ),
-//     );
-//   }
-//
-//   Widget buildIndicator(int index) {
-//     // bool active = pageController.page!.round() == index;
-//     double? controller = pageController.page;
-//     if (controller != null) {
-//       bool active = controller.round() == index;
-//       return AnimatedContainer(
-//
-//         child: Container(
-//           width: 30,
-//           child: Center(
-//             child: Container(
-//               //  color: active ? Colors.white : Colors.red,
-//               width: 25,
-//               height: 7,
-//               //decoration: BoxDecoration(color: active ? Colors.white : Colors.red, borderRadius: BorderRadius.circular(5)),
-//               decoration: BoxDecoration(
-//                 color: active ? Colors.lightBlueAccent : Colors.blueGrey,
-//                 border: Border.all(
-//                     //color: active ? Colors.red : Colors.white
-//                     color: Colors.white),
-//                 borderRadius: BorderRadius.circular(0.0),
-//               ),
-//             ),
-//           ),
-//         ),
-//       );
-//     }
-//     return Container();
-//   }
-// }
-
-class SlideIndicator extends StatelessWidget {
-  final bool isActive;
-
-  const SlideIndicator({Key? key, required this.isActive}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedContainer(
-      width: isActive ? 22.0 : 8.0,
-      height: 8.0,
-      duration: Duration(milliseconds: 200),
-      curve: Curves.fastLinearToSlowEaseIn,
-      decoration: BoxDecoration(
-        color: isActive ? Colors.lightBlueAccent : Colors.blueGrey,
-        border: Border.all(
-            //color: active ? Colors.red : Colors.white
-            color: Colors.white),
-        borderRadius: BorderRadius.circular(0.0),
-      ),
-    );
-  }
-}
-
-// class addBannerImage extends StatefulWidget {
-//   final String slideImage;
-//
-//
-//   addBannerImage({required this.slideImage});
-//
-//   @override
-//   State<addBannerImage> createState() => _addBannerImageState();
-// }
-//
-// class _addBannerImageState extends State<addBannerImage> {
-//
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       child: Image.asset(
-//         widget.slideImage,
-//         fit: BoxFit.cover,
-//       ),
-//     );
-//   }
-// }
 
 Future<List<SliderData>> fetchBannerImage() async {
   final response = await http

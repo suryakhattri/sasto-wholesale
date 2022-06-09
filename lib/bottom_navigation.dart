@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:sasto_wholesale/CategoryDetails/category_details_model.dart';
 import 'package:sasto_wholesale/Chat/chat_list.dart';
+import 'package:sasto_wholesale/cart/cart_model.dart';
 import 'package:sasto_wholesale/cart/cart_provider.dart';
 import 'package:sasto_wholesale/cart/shopping_cart.dart';
 import 'package:sasto_wholesale/fevorite.dart';
@@ -56,6 +59,14 @@ class _BottomNavigationDataItemsState extends State<BottomNavigationDataItems> {
   GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
   @override
+  void initState() {
+    super.initState();
+    setState(() {
+      CartItemProvider().getCounter();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: CurvedNavigationBar(
@@ -82,18 +93,25 @@ class _BottomNavigationDataItemsState extends State<BottomNavigationDataItems> {
                   radius: 8.0,
                   backgroundColor: Colors.green[900],
                   foregroundColor: Colors.white,
-                  child: Consumer<ReviewCartProvider>(
-                    builder: (context, value, child){
-                      return Text(
-                        value.getCounter().toString(),
-                        //_cartList.length.toString(),
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12.0,
-                        ),
-                      );
-                    }),
+                  child: Text(
+                    context.read<CartItemProvider>().getCounter().toString(),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12.0,
+                    ),
                   ),
+                  // Consumer<CartItemProvider>(
+                  //     builder: (context, value, child) {
+                  //   return Text(
+                  //     value.getCounter().toString(),
+                  //     // cart.itemCount.toString(),
+                  //     style: TextStyle(
+                  //       fontWeight: FontWeight.bold,
+                  //       fontSize: 12.0,
+                  //     ),
+                  //   );
+                  // }),
+                ),
               ],
             ),
           ),
@@ -110,7 +128,9 @@ class _BottomNavigationDataItemsState extends State<BottomNavigationDataItems> {
         ],
         color: Colors.white,
         buttonBackgroundColor: Colors.white,
-        backgroundColor: Colors.blueGrey,
+        // backgroundColor: Colors.blueGrey,
+        backgroundColor: Color.fromRGBO(29, 124, 201, 1),
+
         animationCurve: Curves.easeInOut,
         animationDuration: Duration(milliseconds: 600),
         onTap: (int tappedIndex) {

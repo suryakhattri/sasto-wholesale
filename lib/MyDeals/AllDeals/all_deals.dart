@@ -64,7 +64,7 @@ class _AllDealsState extends State<AllDeals> {
                                               fontWeight: FontWeight.bold,
                                               fontSize: 15),
                                         ),
-                                        trailing: RaisedButton(
+                                        trailing: MaterialButton(
                                           elevation: 2,
                                           color: Colors.blue,
                                           focusElevation: 4,

@@ -2,12 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:sasto_wholesale/CategoryDetails/category_details.dart';
-import 'package:sasto_wholesale/Products/Model/products.dart';
 import 'package:sasto_wholesale/TopProducts/top_product_all_item_model.dart';
 import 'package:http/http.dart' as http;
 
 class Products extends StatefulWidget {
-  const Products({Key? key}) : super(key: key);
+  const Products({Key? key, }) : super(key: key);
 
   @override
   _ProductsState createState() => _ProductsState();
@@ -79,7 +78,7 @@ class _ProductsState extends State<Products> {
                                   gridDelegate:
                                       SliverGridDelegateWithFixedCrossAxisCount(
                                           crossAxisCount: 2,
-                                          childAspectRatio: 0.65,
+                                          childAspectRatio: 0.57,
                                           crossAxisSpacing: 10,
                                           mainAxisSpacing: 10),
                                   itemBuilder: (context, index) {

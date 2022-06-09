@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:sasto_wholesale/Categories/MeghaMenu/category_by_product_model.dart';
+import 'package:sasto_wholesale/Categories/MeghaMenu/product_by_slug.dart';
 import 'package:sasto_wholesale/Products/products_list.dart';
 import 'package:http/http.dart' as http;
 
@@ -69,7 +70,8 @@ class _CategoryByProductState extends State<CategoryByProduct> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                  new Products()));
+                                  new ProductBySlug(slug: _productMenuItem[index].slug)));
+
                         },
                       ),
                     );

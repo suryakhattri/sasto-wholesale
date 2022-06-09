@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:sasto_wholesale/CategoryDetails/category_details.dart';
+import 'package:sasto_wholesale/ProductByCategory/product_by_category.dart';
 import 'package:sasto_wholesale/SastoWholeSale/Models/hot_category.dart';
 import 'package:http/http.dart' as http;
 import 'Models/wholesaleMarketItems.dart';
@@ -51,7 +52,7 @@ class _HotCategoriesState extends State<HotCategories> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                              new ProductDetailPage(slug: _hotCategoryItem[index].slug,)));
+                              new ProductByCategory(slug: _hotCategoryItem[index].slug, title: _hotCategoryItem[index].name,)));
                     },
                     child: Padding(
                       padding: const EdgeInsets.only(top: 15.0, left: 10, right: 10, bottom: 10),

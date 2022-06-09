@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:sasto_wholesale/CategoryDetails/category_details.dart';
 import 'package:http/http.dart' as http;
+import 'package:sasto_wholesale/SastoWholesaleMall/sasto_wholesale_mall_all_product.dart';
+import 'package:sasto_wholesale/SastoWholesaleMall/sasto_wholesale_mall_all_product_list.dart';
 import 'Models/wholesaleMarketItems.dart';
 
 class SastoWholeSaleMarket extends StatefulWidget {
@@ -13,6 +15,7 @@ class SastoWholeSaleMarket extends StatefulWidget {
 
 class _SastoWholeSaleMarketState extends State<SastoWholeSaleMarket> {
   late Future<List<LatestSuppliers>>? latestSuppliers;
+  final Image noImage = Image.asset("assets/images/noImage.jpeg");
 
   @override
   void initState() {
@@ -45,10 +48,15 @@ class _SastoWholeSaleMarketState extends State<SastoWholeSaleMarket> {
                 itemBuilder: (context, index) {
                   return InkWell(
                     onTap: () {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => new ProductDetailPage(slug: _latestSuppliers[index].id,)));
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              new SastoWholesaleMallAllProduct(
+                            vendorId: snapshot.data![index].id
+                          ),
+                        ),
+                      );
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -62,11 +70,31 @@ class _SastoWholeSaleMarketState extends State<SastoWholeSaleMarket> {
                               Container(
                                 height: 150,
                                 // color: Colors.blueAccent,
-                                child: Image.network(
-                                  _latestSuppliers[index].imageUrl,
-                                  // height: constraints.maxHeight * 0.6,
-                                  fit: BoxFit.cover,
-                                ),
+                                child: (_latestSuppliers[index].imageUrl !=
+                                        null) // Only use the network image if the url is not null
+                                    ? Image.network(
+                                        _latestSuppliers[index].imageUrl,
+                                        loadingBuilder: (context, child,
+                                                loadingProgress) =>
+                                            (loadingProgress == null)
+                                                ? child
+                                                : Center(
+                                                    child: Container(
+                                                        height: 20,
+                                                        width: 30,
+                                                        child:
+                                                            LinearProgressIndicator())),
+                                        errorBuilder:
+                                            (context, error, stackTrace) =>
+                                                noImage,
+                                      )
+                                    : noImage,
+
+                                // Image.network(
+                                //   _latestSuppliers[index].imageUrl,
+                                //   // height: constraints.maxHeight * 0.6,
+                                //   fit: BoxFit.cover,
+                                // ),
                               ),
                               SizedBox(
                                 height: 5,

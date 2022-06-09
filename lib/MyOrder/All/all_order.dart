@@ -83,7 +83,7 @@ class _AllOrderState extends State<AllOrder> {
                                         ),
                                         trailing:
                                             _allOrder[index].status == "pending"
-                                                ? RaisedButton(
+                                                ? MaterialButton(
                                                     elevation: 2,
                                                     color: Colors.blue,
                                                     focusElevation: 4,

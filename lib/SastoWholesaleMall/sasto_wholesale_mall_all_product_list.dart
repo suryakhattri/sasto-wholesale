@@ -6,7 +6,8 @@ import 'package:sasto_wholesale/CategoryDetails/category_details.dart';
 import 'package:sasto_wholesale/TopProducts/top_product_all_item_model.dart';
 
 class SastoWholesaleMallAllProductList extends StatefulWidget {
-  const SastoWholesaleMallAllProductList({Key? key}) : super(key: key);
+  const SastoWholesaleMallAllProductList({Key? key, required this.vendorId}) : super(key: key);
+  final int vendorId;
 
   @override
   _SastoWholesaleMallAllProductListState createState() => _SastoWholesaleMallAllProductListState();
@@ -18,7 +19,8 @@ class _SastoWholesaleMallAllProductListState extends State<SastoWholesaleMallAll
   @override
   void initState() {
     super.initState();
-    _sastoWholesaleAllProductList = fetchSastoWholesaleAllProduct();
+    print(widget.vendorId);
+    _sastoWholesaleAllProductList = fetchSastoWholesaleAllProduct(widget.vendorId);
   }
 
   @override
@@ -50,7 +52,7 @@ class _SastoWholesaleMallAllProductListState extends State<SastoWholesaleMallAll
                               gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 2,
-                                  childAspectRatio: 0.63,
+                                  childAspectRatio: 0.57,
                                   crossAxisSpacing: 10,
                                   //mainAxisSpacing: 10
                               ),
@@ -83,6 +85,8 @@ class _SastoWholesaleMallAllProductListState extends State<SastoWholesaleMallAll
                                               decoration: BoxDecoration(),
                                               child: Image.network(
                                                 _newArrivalData[index].imageUrl,
+                                                height: 150,
+                                                width: 150,
                                                 fit: BoxFit.fill,
                                               ),
                                             ),
@@ -154,9 +158,9 @@ class _SastoWholesaleMallAllProductListState extends State<SastoWholesaleMallAll
   }
 }
 
-Future<List<TopProductData>> fetchSastoWholesaleAllProduct() async {
+Future<List<TopProductData>> fetchSastoWholesaleAllProduct(var vendorId) async {
   final response = await http.get(Uri.parse(
-      'https://seller.sastowholesale.com/api/products?from_vendor=4&cat=&subcat='));
+      'https://seller.sastowholesale.com/api/products?from_vendor=${vendorId.toString()}'));
   if (response.statusCode == 200) {
     List jsonResponse = json.decode(response.body)['data'];
     print("${response.body}");

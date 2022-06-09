@@ -5,15 +5,10 @@ import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
 import 'package:sasto_wholesale/CategoryDetails/Description/description_tab.dart';
 import 'package:sasto_wholesale/CategoryDetails/category_details_model.dart';
-import 'package:sasto_wholesale/CategoryDetails/data.dart';
-import 'package:sasto_wholesale/CategoryDetails/vendor_model.dart';
+import 'package:sasto_wholesale/CategoryDetails/vendor_profile.dart';
 import 'package:sasto_wholesale/DBHelper/db_helper.dart';
-import 'package:sasto_wholesale/Profile/profile_order.dart';
-import 'package:sasto_wholesale/SastoWholesaleMall/sasto_wholesale_mall_all_product.dart';
-import 'package:sasto_wholesale/Suppliers/suppliers.dart';
 import 'package:sasto_wholesale/Theme/theme.dart';
 import 'package:http/http.dart' as http;
-import 'package:sasto_wholesale/cart/cart_model.dart';
 import 'package:sasto_wholesale/cart/cart_provider.dart';
 import 'package:sasto_wholesale/cart/shopping_cart.dart';
 
@@ -31,15 +26,13 @@ class _ProductDetailPageState extends State<ProductDetailPage>
   late AnimationController controller;
   late Animation<double> animation;
   late Future<CaegoryDetailModel> _categoryData;
-  late Future<VendorModel> _vendorModel;
   late Future<List<Range>> _pricedataList;
   late Future<List<Images>> _thumbNailImage;
   TextEditingController _quantityController = TextEditingController();
-
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int selectedImage = 0;
   int vendorId = 0;
-  late ReviewCartProvider reviewCartProvider;
-  DBHelper? dbHelper = DBHelper();
+  DBHelper dbHelper = DBHelper();
 
   @override
   void dispose() {
@@ -51,8 +44,9 @@ class _ProductDetailPageState extends State<ProductDetailPage>
   @override
   void initState() {
     super.initState();
-    reviewCartProvider =
-        Provider.of<ReviewCartProvider>(context, listen: false);
+    CartItemProvider().getData();
+    // reviewCartProvider =
+    //     Provider.of<ReviewCartProvider>(context, listen: false);
     controller =
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
     animation = Tween<double>(begin: 0, end: 1).animate(
@@ -63,8 +57,6 @@ class _ProductDetailPageState extends State<ProductDetailPage>
     _pricedataList = fetchPriceRange(slugdata);
     _thumbNailImage = fetchThumbNailImage(slugdata);
     _quantityController.text = "1";
-    var vendor = vendorId;
-    _vendorModel = fetchVendor();
     // Setting the initial value for the field.
   }
 
@@ -85,41 +77,46 @@ class _ProductDetailPageState extends State<ProductDetailPage>
           ),
           Row(
             children: [
-              InkWell(
+              GestureDetector(
                 onTap: () {
-                  Navigator.of(context).pop();
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => new ShoppingCartPage()));
                 },
-                child: _icon(Icons.share_outlined,
-                    color: Colors.black54,
-                    size: 15,
-                    padding: 12,
-                    isOutLine: true),
+                child: Stack(
+                  //alignment: Alignment.topCenter,
+                  children: <Widget>[
+                    Icon(
+                      Icons.shopping_cart,
+                      size: 35.0,
+                      color: Colors.red,
+                    ),
+                    //if (_cartList.length > 0)
+                    CircleAvatar(
+                        radius: 8.0,
+                        backgroundColor: Colors.green[900],
+                        foregroundColor: Colors.white,
+                        child: Consumer<CartItemProvider>(
+                            builder: (context, value, child) {
+                          return Text(
+                            value.getCounter().toString(),
+                            // cart.itemCount.toString(),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12.0,
+                            ),
+                          );
+                        })),
+                  ],
+                ),
               ),
-              SizedBox(
-                width: 5,
-              ),
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    isLiked = !isLiked;
-                  });
-                },
-                child: _icon(isLiked ? Icons.favorite : Icons.favorite_border,
-                    color: isLiked ? Colors.red : Colors.black12,
-                    size: 15,
-                    padding: 12,
-                    isOutLine: false),
-              ),
-              SizedBox(
-                width: 5,
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-                child: _icon(Icons.shopping_cart,
-                    color: Colors.red, size: 15, padding: 12, isOutLine: true),
-              ),
+              // InkWell(
+              //   onTap: () {
+              //   },
+              //   child: _icon(Icons.shopping_cart,
+              //       color: Colors.red, size: 15, padding: 12, isOutLine: true),
+              // ),
             ],
           ),
         ],
@@ -265,142 +262,15 @@ class _ProductDetailPageState extends State<ProductDetailPage>
     );
   }
 
-  // Widget _detailWidget() {
-  //   return DraggableScrollableSheet(
-  //     maxChildSize: .8,
-  //     initialChildSize: .53,
-  //     minChildSize: .53,
-  //     builder: (context, scrollController) {
-  //       return Container(
-  //         // padding: AppTheme.padding.copyWith(bottom: 0),
-  //         decoration: BoxDecoration(
-  //             borderRadius: BorderRadius.only(
-  //               topLeft: Radius.circular(40),
-  //               topRight: Radius.circular(40),
-  //             ),
-  //             color: Colors.white),
-  //         child: SingleChildScrollView(
-  //           controller: scrollController,
-  //           child: Column(
-  //             crossAxisAlignment: CrossAxisAlignment.start,
-  //             mainAxisSize: MainAxisSize.max,
-  //             children: <Widget>[
-  //               SizedBox(height: 5),
-  //               Container(
-  //                 alignment: Alignment.center,
-  //                 child: Container(
-  //                   width: 50,
-  //                   height: 5,
-  //                   decoration: BoxDecoration(
-  //                       color: Colors.grey,
-  //                       borderRadius: BorderRadius.all(Radius.circular(10))),
-  //                 ),
-  //               ),
-  //               SizedBox(height: 10),
-  //               Container(
-  //                 child: Padding(
-  //                   padding:
-  //                       const EdgeInsets.only(left: 10.0, right: 10, top: 10.0),
-  //                   child: Text(
-  //                     "i12 Pro Max Global Version Mobile Phone 8GB+512GB smartphone",
-  //                     style: TextStyle(fontSize: 20),
-  //                     maxLines: 5,
-  //                   ),
-  //                 ),
-  //               ),
-  //               SizedBox(
-  //                 height: 20,
-  //               ),
-  //               Divider(
-  //                 thickness: 0.5,
-  //                 color: Colors.black,
-  //               ),
-  //               ListTile(
-  //                 leading: Text(
-  //                   "Category:",
-  //                   style: TextStyle(
-  //                       color: Colors.black,
-  //                       fontSize: 17,
-  //                       fontWeight: FontWeight.bold),
-  //                 ),
-  //                 title: InkWell(
-  //                   onTap: () {},
-  //                   child: Text(
-  //                     "Electronics",
-  //                     style: TextStyle(
-  //                         color: Colors.blue,
-  //                         fontSize: 17,
-  //                         fontWeight: FontWeight.bold),
-  //                   ),
-  //                 ),
-  //               ),
-  //               Divider(
-  //                 thickness: 0.5,
-  //                 color: Colors.black,
-  //               ),
-  //               // _availableSize(),
-  //               SizedBox(
-  //                 height: 10,
-  //               ),
-  //               Padding(
-  //                 padding: const EdgeInsets.only(left: 15.0),
-  //                 child: Text(
-  //                   "Price Range:",
-  //                   style: TextStyle(
-  //                       color: Colors.black,
-  //                       fontSize: 17,
-  //                       fontWeight: FontWeight.bold),
-  //                 ),
-  //               ),
-  //               SizedBox(
-  //                 height: 10,
-  //               ),
-  //               //_priceRange(),
-  //               Divider(
-  //                 thickness: 0.5,
-  //                 color: Colors.black,
-  //               ),
-  //               //_availableColor(),
-  //               SizedBox(
-  //                 height: 10,
-  //               ),
-  //               _quantityInputForm(),
-  //               SizedBox(
-  //                 height: 10,
-  //               ),
-  //               _cartSummary(),
-  //               Padding(
-  //                 padding: const EdgeInsets.only(left: 15.0),
-  //                 child: Text(
-  //                   "Share:",
-  //                   style: TextStyle(
-  //                       color: Colors.black,
-  //                       fontSize: 17,
-  //                       fontWeight: FontWeight.bold),
-  //                 ),
-  //               ),
-  //
-  //               SizedBox(
-  //                 height: 10,
-  //               ),
-  //               _share(),
-  //               SizedBox(
-  //                 height: 20,
-  //               ),
-  //               _description(),
-  //             ],
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-
   Widget _description() {
-    return Container(
-      height: 600,
-      child: DescriptionTab(slugData: widget.slug),
-    );
+    return widget.slug != null
+        ? Container(
+            height: 600,
+            child: DescriptionTab(slugData: widget.slug),
+          )
+        : Container(
+            height: 0,
+          );
   }
 
   Widget _priceRange() {
@@ -566,297 +436,296 @@ class _ProductDetailPageState extends State<ProductDetailPage>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(left: 15.0, right: 15, bottom: 20),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              width: MediaQuery.of(context).size.width / 2.5,
-              child: Material(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0)),
-                color: Colors.blue[900],
-                elevation: 2.0,
-                //   highlightElevation: 2,
-                child: MaterialButton(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text("Item Added to cart successfully")));
-                    // dbHelper!
-                    //     .insert(CartModel(
-                    //     id: snapshot.data?.data.id ?? 0,
-                    //     productCategoryId: snapshot.data?.data.productCategoryId ?? 0,
-                    //     productName: snapshot.data?.data.title ?? 'No Name',
-                    //     productPrice: snapshot.data?.data.price ?? 0,
-                    //     quantity: 1,
-                    //     unitTag: snapshot.data?.data.unit ?? 'No Unit',
-                    //     image: snapshot.data?.data.imageUrl ?? 'No Image'))
-                    //     .then((value) {
-                    //   print(
-                    //       "product is Added to cart");
-                    //   reviewCartProvider
-                    //       .addTotalPrice(
-                    //       double.parse(snapshot
-                    //           .data!.data.price));
-                    //   reviewCartProvider
-                    //       .addCounter();
-                    // }).onError((error, stackTrace) {
-                    //   print(error.toString());
-                    // });
-                    // reviewCartProvider.addToCart(snapshot.data!.data);
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: (context) =>
-                    //         new ShoppingCartPage()));
-                  },
-                  minWidth: MediaQuery.of(context).size.width,
-                  height: 50,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.add_shopping_cart_rounded,
-                        color: Colors.white,
-                        size: 25,
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        "Add To Cart",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 17.0),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width / 2.5,
-              child: Material(
-                // borderRadius: BorderRadius.circular(28.0),
-                // color: Colors.blue.withOpacity(0.8),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0)),
-                color: Colors.blue[900],
-                elevation: 2.0,
-                //   highlightElevation: 2,
-                child: MaterialButton(
-                  onPressed: () {
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: (context) =>
-                    //         new BottomNavigationDataItems()));
-                  },
-                  minWidth: MediaQuery.of(context).size.width,
-                  height: 50,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.question_answer_outlined,
-                        color: Colors.white,
-                        size: 25,
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        "Chat Now",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 17.0),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
-      body: SafeArea(
-        child: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-            colors: [
-              Color(0xfffbfbfb),
-              Color(0xfff7f7f7),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          )),
-          child: FutureBuilder<CaegoryDetailModel>(
-            future: _categoryData,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return Stack(
-                        children: <Widget>[
-                          Column(
-                            children: <Widget>[
-                              _appBar(),
-                              _thumbnail(),
+    final cart = Provider.of<CartItemProvider>(context);
+    return Container(
+      color: Colors.white,
+      child: FutureBuilder<CaegoryDetailModel>(
+        future: _categoryData,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Scaffold(
+              key: _scaffoldKey,
+              bottomNavigationBar: Padding(
+                padding:
+                    const EdgeInsets.only(left: 15.0, right: 15, bottom: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width / 2.5,
+                      child: Material(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0)),
+                        color: Color.fromRGBO(29, 124, 201, 1),
+                        elevation: 2.0,
+                        //   highlightElevation: 2,
+                        child: MaterialButton(
+                          onPressed: () {
+                            setState(() {
+                              cart.addItem(
+                                  snapshot.data?.data.id ?? 0,
+                                  snapshot.data?.data.vendorId.toString() ?? '',
+                                  snapshot.data?.data.title ?? '',
+                                  snapshot.data?.data.imageUrl ?? '',
+                                  snapshot.data?.data.ranges.first.price
+                                          .toString() ??
+                                      '',
+                                  int.parse(_quantityController.text),
+                                  "Rs. ${(snapshot.data?.data.ranges.first.price.toString() ?? 0 * int.parse(_quantityController.text))}",
+                                  snapshot.data?.data.shippingCharge
+                                          .toString() ??
+                                      '');
+                              cart.addTotalPrice(double.parse(snapshot
+                                  .data!.data.ranges.first.price
+                                  .toString()));
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  new SnackBar(
+                                      content: new Text(
+                                          "Product Added To cart Successfully")));
+                              //  }
+                              // else {
+                              //     _scaffoldKey.currentState?.showSnackBar(
+                              //         new SnackBar(
+                              //             content: new Text(
+                              //                 "You cannot Added product At a time from same vendor")));
+                              // }
+                            });
+                          },
+                          minWidth: MediaQuery.of(context).size.width,
+                          height: 50,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.add_shopping_cart_rounded,
+                                color: Colors.white,
+                                size: 25,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                "Add To Cart",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 17.0),
+                              ),
                             ],
                           ),
-                          Container(
-                            height: MediaQuery.of(context).size.height,
-                            child: DraggableScrollableSheet(
-                              maxChildSize: .8,
-                              initialChildSize: .53,
-                              minChildSize: .53,
-                              builder: (context, scrollController) {
-                                return Container(
-                                  // padding: AppTheme.padding.copyWith(bottom: 0),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(40),
-                                        topRight: Radius.circular(40),
-                                      ),
-                                      color: Colors.white),
-                                  child: SingleChildScrollView(
-                                    controller: scrollController,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: <Widget>[
-                                        SizedBox(height: 5),
-                                        Container(
-                                          alignment: Alignment.center,
-                                          child: Container(
-                                            width: 50,
-                                            height: 5,
-                                            decoration: BoxDecoration(
-                                                color: Colors.grey,
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(10))),
-                                          ),
-                                        ),
-                                        SizedBox(height: 10),
-                                        Container(
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 10.0,
-                                                right: 10,
-                                                top: 10.0),
-                                            child: Text(
-                                              snapshot.data!.data.title,
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold),
-                                              maxLines: 5,
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 20,
-                                        ),
-                                        Divider(
-                                          thickness: 0.5,
-                                          color: Colors.black,
-                                        ),
-                                        ListTile(
-                                          leading: Text(
-                                            "Category:",
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 17,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          title: InkWell(
-                                            onTap: () {},
-                                            child: Text(
-                                              snapshot.data!.data
-                                                  .productCategory.name,
-                                              style: TextStyle(
-                                                  color: Colors.blue,
-                                                  fontSize: 17,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ),
-                                        ),
-                                        Divider(
-                                          thickness: 0.5,
-                                          color: Colors.black,
-                                        ),
-                                        // _availableSize(),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        _priceRange(),
-                                        Divider(
-                                          thickness: 0.5,
-                                          color: Colors.black,
-                                        ),
-                                        //_availableColor(),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        _quantityInputForm(),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        _cartSummary(),
-                                       // _supplierProfile(vendorId: snapshot.data!.data.vendorId),
-                                        _supplierProfile(),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 15.0),
-                                          child: Text(
-                                            "Share:",
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 17,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        _share(),
-                                        SizedBox(
-                                          height: 20,
-                                        ),
-                                        _description(),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width / 2.5,
+                      child: Material(
+                        // borderRadius: BorderRadius.circular(28.0),
+                        // color: Colors.blue.withOpacity(0.8),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0)),
+                        color: Color.fromRGBO(29, 124, 201, 1),
+                        elevation: 2.0,
+                        //   highlightElevation: 2,
+                        child: MaterialButton(
+                          onPressed: () {
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) =>
+                            //         new BottomNavigationDataItems()));
+                          },
+                          minWidth: MediaQuery.of(context).size.width,
+                          height: 50,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.question_answer_outlined,
+                                color: Colors.white,
+                                size: 25,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                "Chat Now",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 17.0),
+                              ),
+                            ],
                           ),
-                        ],
-                      );
-                    });
-              } else if (snapshot.hasError) {
-                return Text('${snapshot.error}');
-              }
-              return Container(
-                  alignment: Alignment.center,
-                  margin: EdgeInsets.only(top: 20),
-                  child: CircularProgressIndicator(
-                      // backgroundColor: Colors.grey,
-                      //color: Colors.purple,
-                      // valueColor: ,
-                      ));
-            },
-          ),
-        ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              body: SafeArea(
+                child: Container(
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                    colors: [
+                      Color(0xfffbfbfb),
+                      Color(0xfff7f7f7),
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  )),
+                  child: FutureBuilder<CaegoryDetailModel>(
+                    future: _categoryData,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: 1,
+                            scrollDirection: Axis.vertical,
+                            //physics: NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return Column(
+                                children: [
+                                  _appBar(),
+                                  _thumbnail(),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: <Widget>[
+                                      SizedBox(height: 5),
+                                      Container(
+                                        alignment: Alignment.center,
+                                        child: Container(
+                                          width: 50,
+                                          height: 5,
+                                          decoration: BoxDecoration(
+                                              color: Colors.grey,
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10))),
+                                        ),
+                                      ),
+                                      SizedBox(height: 10),
+                                      Container(
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 10.0, right: 10, top: 10.0),
+                                          child: Text(
+                                            snapshot.data!.data.title,
+                                            style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold),
+                                            maxLines: 5,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Divider(
+                                        thickness: 0.5,
+                                        color: Colors.black,
+                                      ),
+                                      ListTile(
+                                        leading: Text(
+                                          "Category:",
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        title: InkWell(
+                                          onTap: () {},
+                                          child: Text(
+                                            snapshot.data!.data.productCategory
+                                                .name,
+                                            style: TextStyle(
+                                                color: Colors.blue,
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                      ),
+                                      Divider(
+                                        thickness: 0.5,
+                                        color: Colors.black,
+                                      ),
+                                      // _availableSize(),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      _priceRange(),
+                                      Divider(
+                                        thickness: 0.5,
+                                        color: Colors.black,
+                                      ),
+                                      //_availableColor(),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      _quantityInputForm(),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      _cartSummary(),
+                                      // _supplierProfile(vendorId: snapshot.data!.data.vendorId),
+                                      VendorProfile(
+                                        vendorId: snapshot.data!.data.vendorId,
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 15.0),
+                                        child: Text(
+                                          "Share:",
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      _share(),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      _description(),
+                                    ],
+                                  ),
+                                ],
+                              );
+                            });
+                      } else if (snapshot.hasError) {
+                        return Text('${snapshot.error}');
+                      }
+                      return Container(
+                          alignment: Alignment.center,
+                          margin: EdgeInsets.only(top: 20),
+                          child: CircularProgressIndicator(
+                              // backgroundColor: Colors.grey,
+                              //color: Colors.purple,
+                              // valueColor: ,
+                              ));
+                    },
+                  ),
+                ),
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return Text('${snapshot.error}');
+          }
+          return Container(
+              alignment: Alignment.center,
+              margin: EdgeInsets.only(top: 20),
+              child: CircularProgressIndicator(
+                  // backgroundColor: Colors.grey,
+                  //color: Colors.purple,
+                  // valueColor: ,
+                  ));
+        },
       ),
     );
   }
@@ -867,65 +736,65 @@ class _ProductDetailPageState extends State<ProductDetailPage>
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: 1,
-            itemBuilder: (context, index) {
-              return Column(
-                children: [
-                  Container(
-                    height: 50,
-                    child: ListTile(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: 1,
+              itemBuilder: (context, index) {
+                return Column(
+                  children: [
+                    Container(
+                      height: 50,
+                      child: ListTile(
+                          leading: Text(
+                            "Shipping",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.normal,
+                                fontSize: 17),
+                          ),
+                          trailing: snapshot.data!.data.shippingCharge
+                                      .toString() !=
+                                  null
+                              ? Text(
+                                  snapshot.data!.data.shippingCharge.toString(),
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.normal,
+                                      fontSize: 17),
+                                )
+                              : Text(
+                                  "Rs. 0",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.normal,
+                                      fontSize: 17),
+                                )),
+                    ),
+                    Container(
+                      height: 50,
+                      child: ListTile(
                         leading: Text(
-                          "Shipping",
+                          "Total",
                           style: TextStyle(
                               color: Colors.black,
-                              fontWeight: FontWeight.normal,
+                              fontWeight: FontWeight.bold,
                               fontSize: 17),
                         ),
-                        trailing:
-                        snapshot.data!.data.shippingCharge.toString() != null
+                        trailing: snapshot.data!.data.priceRange != null
                             ? Text(
-                          snapshot.data!.data.shippingCharge.toString(),
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.normal,
-                              fontSize: 17),
-                        )
-                            : Text(
-                          "Rs . 0",
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.normal,
-                              fontSize: 17),
-                        )),
-                  ),
-                  Container(
-                    height: 50,
-                    child: ListTile(
-                      leading: Text(
-                        "Total",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 17),
+                                // snapshot.data!.data.priceRange,
+                                "Rs. ${(snapshot.data!.data.ranges[index].price * int.parse(_quantityController.text))}",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 17),
+                              )
+                            : Text(""),
                       ),
-                      trailing: snapshot.data!.data.priceRange != null
-                          ? Text(
-                        // snapshot.data!.data.priceRange,
-                        "Rs. ${(snapshot.data!.data.ranges[index].price * int.parse(_quantityController.text) + snapshot.data!.data.shippingCharge)}",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 17),
-                      )
-                          : Text(""),
                     ),
-                  ),
-                ],
-              );
-            });
-
+                  ],
+                );
+              });
         } else if (snapshot.hasError) {
           return Text('${snapshot.error}');
         }
@@ -1134,160 +1003,6 @@ class _ProductDetailPageState extends State<ProductDetailPage>
       ),
     );
   }
-
-  Widget _supplierProfile() {
-    return FutureBuilder<VendorModel>(
-      future: _vendorModel,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Container(
-              // width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                image: DecorationImage(
-                  fit: BoxFit.fill,
-                  image: AssetImage(
-                    'assets/images/supplier-mini-card-bg.png',
-                  ),
-                ),
-              ),
-              child: Column(
-                children: [
-                  Image.asset(
-                    "assets/images/verified-supplier-badge.png",
-                    height: 35,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20.0),
-                    child: ListTile(
-                      leading: Container(
-                        //margin: EdgeInsets.only(top: 20.0),
-                        width: 60.0,
-                        height: 60.0,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            image: NetworkImage(snapshot.data!.data.imageUrl),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      title: Text(
-                        snapshot.data!.data.shopName,
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Text(
-                          snapshot.data!.data.businessType,
-                        style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 17,
-                            fontWeight: FontWeight.normal),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    height: 30,
-                    child: ListTile(
-                      leading: Icon(
-                        Icons.attractions,
-                        size: 25,
-                        color: Colors.blue,
-                      ),
-                      title: Text(
-                        snapshot.data!.data.category,
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    height: 30,
-                    child: ListTile(
-                      leading: Icon(
-                        Icons.attractions,
-                        size: 25,
-                        color: Colors.blue,
-                      ),
-                      title: Text(
-                        "1 Years",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    height: 30,
-                    child: ListTile(
-                      leading: Icon(
-                        Icons.attractions,
-                        size: 25,
-                        color: Colors.blue,
-                      ),
-                      title: Text(
-                        "Trade Assurance",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    height: 30,
-                    child: ListTile(
-                      leading: Icon(
-                        Icons.attractions,
-                        size: 25,
-                        color: Colors.blue,
-                      ),
-                      title: Text(
-                        "Onsite Check",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                              new SastoWholesaleMallAllProduct()));
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 30.0, bottom: 20.0),
-                      child: Text(
-                        "View Suppliers Profile",
-                        style: TextStyle(
-                            color: Colors.blue,
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          );
-        } else if (snapshot.hasError) {
-          return Text('${snapshot.error}');
-        }
-        return Container();
-      },
-    );
-  }
 }
 
 Future<CaegoryDetailModel> fetchCategoryDetails(String categorySlog) async {
@@ -1323,19 +1038,6 @@ Future<List<Images>> fetchThumbNailImage(String categorySlog) async {
     List jsonResponse = json.decode(response.body)['data']['images'];
     print("${response.body}");
     return jsonResponse.map((data) => new Images.fromJson(data)).toList();
-  } else {
-    throw Exception('Failed to load data');
-  }
-}
-
-//Vendor Api
-Future<VendorModel> fetchVendor() async {
-  final response = await http.get(Uri.parse(
-      'https://seller.sastowholesale.com/api/vendors/find-by-user-id/4'));
-  if (response.statusCode == 200) {
-    var jsonResponse = json.decode(response.body);
-    print("${response.body}");
-    return new VendorModel.fromJson(jsonResponse);
   } else {
     throw Exception('Failed to load data');
   }

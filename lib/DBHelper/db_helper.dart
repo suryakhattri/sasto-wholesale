@@ -3,7 +3,6 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 import 'dart:io' as io;
-import 'package:sasto_wholesale/CategoryDetails/category_details_model.dart';
 
 class DBHelper {
 
@@ -11,7 +10,7 @@ class DBHelper {
 
   Future<Database?> get db async {
     if(_db != null) {
-      return _db!;
+      return _db;
     }
     _db = await initDataBase();
   }
@@ -19,12 +18,12 @@ class DBHelper {
   initDataBase() async{
     io.Directory documentDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentDirectory.path, 'cartModel.db');
-    var db = await openDatabase(path, version: 1, onCreate: _oncreate,);
+    var db = await openDatabase(path, version: 1, onCreate: _onCreate,);
     return db;
   }
-  _oncreate(Database db, int version) async{
+  _onCreate(Database db, int version) async{
       await db.execute(
-        'CREATE TABLE cartModel(id INTEGER PRIMARY KEY, productCategoryId INTEGER, productName TEXT, productPrice INTEGER, image TEXT, quantity INTEGER, unitTag TEXT)'
+        'CREATE TABLE cartModel(id INTEGER PRIMARY KEY, name TEXT, imageUrl TEXT, price TEXT, quantity INTEGER, totalPrice TEXT, shippingCharge TEXT, vendorId TEXT)'
       );
   }
 
@@ -34,10 +33,28 @@ class DBHelper {
     return cartData;
   }
 
-  Future<List<CartModel>> getCartList() async{
+  Future<List<CartModel>?> getCartList() async{
     var dbClient = await db;
-    final List<Map<String, Object?>> quaryResult = await dbClient!.query('cartModel');
-    return quaryResult.map((e) => CartModel.fromMap(e)).toList();
+    final List<Map<String, Object?>>? quaryResult = await dbClient?.query('cartModel') ;
+    return quaryResult?.map((e) => CartModel?.fromMap(e)).toList();
 
+  }
+  Future<int> delete(int id)async{
+    var dbClient = await db ;
+    return await dbClient!.delete(
+        'cartModel',
+        where: 'id = ?',
+        whereArgs: [id]
+    );
+  }
+
+  Future<int> updateQuantity(CartModel cart)async{
+    var dbClient = await db ;
+    return await dbClient!.update(
+        'cart',
+        cart.toMap(),
+        where: 'id = ?',
+        whereArgs: [cart.id]
+    );
   }
 }

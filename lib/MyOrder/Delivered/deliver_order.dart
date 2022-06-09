@@ -20,7 +20,7 @@ class _DeliverOrderState extends State<DeliverOrder> {
             style: TextStyle(
                 color: Colors.black, fontSize: 17, fontWeight: FontWeight.bold),
           ),
-          RaisedButton(
+          MaterialButton(
             elevation: 2,
             color: Colors.blue,
             focusElevation: 4,

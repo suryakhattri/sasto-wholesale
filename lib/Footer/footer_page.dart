@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sasto_wholesale/Footer/we_accept.dart';
-import 'package:sasto_wholesale/OurPartners/our_partners.dart';
+import 'package:sasto_wholesale/BecameASeller/became_a_seller.dart';
+import 'package:sasto_wholesale/BlogList/all_blog.dart';
+import 'package:sasto_wholesale/Footer/web_house_developer.dart';
 
 class Footer extends StatefulWidget {
   const Footer({Key? key}) : super(key: key);
@@ -245,11 +246,17 @@ class _FooterState extends State<Footer> {
                         fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 10,),
-                  Text("Our Blogs",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold),
+                  InkWell(
+                    onTap: (){
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => AllBlog()));
+                    },
+                    child: Text("Our Blogs",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
                   SizedBox(height: 20,),
                   Text(
@@ -260,11 +267,17 @@ class _FooterState extends State<Footer> {
                         fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 10,),
-                  Text("Become a Seller",
-                    style: TextStyle(
-                        color: Colors.grey[200],
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold),
+                  InkWell(
+                    onTap: (){
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => BecameASeller()));
+                    },
+                    child: Text("Become a Seller",
+                      style: TextStyle(
+                          color: Colors.grey[200],
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
                   SizedBox(height: 10,),
                   Text("Logistics Management",
@@ -317,12 +330,18 @@ class _FooterState extends State<Footer> {
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 20,),
-                  Text("Designed & Developed By: Web House Nepal",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
+                  InkWell(
+                    onTap: (){
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => WebHouseDevelopMent()));
+                    },
+                    child: Text("Designed & Developed By: Web House Nepal",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                   SizedBox(height: 10,),
                   Divider(thickness: 0.5, color: Colors.white,),
