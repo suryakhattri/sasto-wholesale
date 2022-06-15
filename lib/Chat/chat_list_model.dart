@@ -49,6 +49,9 @@ class ChatListModel {
   };
 }
 
+ChatData testFromJson(String str) => ChatData.fromJson(json.decode(str));
+String testToJson(ChatData data) => json.encode(data.toJson());
+
 class ChatData {
   ChatData({
     required this.id,

@@ -1,6 +1,7 @@
 // @dart=2.9
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sasto_wholesale/Chat/chat_provider.dart';
 import 'package:sasto_wholesale/Chat/conversation.dart';
 import 'package:sasto_wholesale/Login/login.dart';
 import 'package:sasto_wholesale/SignUp/sign_up.dart';
@@ -14,6 +15,7 @@ import 'cart/cart_provider.dart';
 Future<void> main() async {
   runApp(MultiProvider(
     providers: [
+      ChangeNotifierProvider(create: (_) => ChatProvider()),
       ChangeNotifierProvider(create: (_) => CartItemProvider()),
       // ChangeNotifierProvider.value(value: CartItemData()),
       ChangeNotifierProvider.value(
@@ -36,6 +38,7 @@ class _SastoWholesaleAppState extends State<SastoWholesaleApp> {
   @override
   void initState() {
     super.initState();
+    ChatProvider().init();
     CartItemProvider().getData();
     CartItemProvider().getCounter();
   }

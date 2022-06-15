@@ -37,6 +37,37 @@ class _ChatListState extends State<ChatList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: const Color(0xff03dac6),
+        foregroundColor: Colors.black,
+        onPressed: () {
+          var data = {
+            "id": "9c842e8d-6a05-48cd-a5cc-ae000e48b8b3",
+            "customer_user_id": 9,
+            "vendor_user_id": 4,
+            "last_message_at": "10 hrs ago",
+            "updated_at": "2022-06-14T05:15:53.000000Z",
+            "opponent": {
+              "id": 4,
+              "name": "Royal Sample House",
+              "avatar_url":
+                  "https://ui-avatars.com/api/?name=Royal+Sample+House&background=0D8ABC&color=fff&rounded=1"
+            },
+            "has_unseen_messages": true,
+            "last_message_id": 40
+          };
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => new ChatDetails(
+                        chatData: testFromJson(jsonEncode(data)),
+                        userId: 9,
+                        vendorId: 4,
+                      )));
+          // Respond to button press
+        },
+        child: Icon(Icons.add),
+      ),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: FutureBuilder<ChatListModel>(
@@ -68,9 +99,11 @@ class _ChatListState extends State<ChatList> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => new ChatDetails(
-                                          chatData: snapshot.data!.data[index], userId: snapshot.data!.data[index].customerUserId,
-                                      vendorId: snapshot.data!.data[index].vendorUserId,
-
+                                          chatData: snapshot.data!.data[index],
+                                          userId: snapshot
+                                              .data!.data[index].customerUserId,
+                                          vendorId: snapshot
+                                              .data!.data[index].vendorUserId,
                                         )));
                           },
                           child: Card(

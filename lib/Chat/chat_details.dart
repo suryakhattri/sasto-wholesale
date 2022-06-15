@@ -5,13 +5,19 @@ import 'package:provider/provider.dart';
 import 'package:sasto_wholesale/Chat/chat_details_model.dart';
 import 'package:sasto_wholesale/Chat/chat_list_model.dart';
 import 'package:sasto_wholesale/Chat/chat_message_model.dart';
+import 'package:sasto_wholesale/Chat/chat_provider.dart';
 import 'package:sasto_wholesale/Chat/conversation.dart';
 import 'package:sasto_wholesale/Chat/message_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class ChatDetails extends StatefulWidget {
-  const ChatDetails({Key? key, required this.chatData, required this.userId, required this.vendorId}) : super(key: key);
+  const ChatDetails(
+      {Key? key,
+      required this.chatData,
+      required this.userId,
+      required this.vendorId})
+      : super(key: key);
   final ChatData chatData;
   final int userId;
   final int vendorId;
@@ -52,10 +58,13 @@ class _ChatDetailsState extends State<ChatDetails> {
     _messageModel = fetchChatMessage();
   }
 
+  late ChatProvider chatProvider;
 
   @override
   Widget build(BuildContext context) {
-   // final Conversation conversation = Provider.of<Conversation>(context);
+    chatProvider = Provider.of<ChatProvider>(context);
+    // chatProvider.subscribe(widget.chatData.id);
+    // final Conversation conversation = Provider.of<Conversation>(context);
     final TextEditingController _controller = new TextEditingController();
 
     //conversation.bindEvent(widget.chatData.id, 'onMessage');
@@ -86,8 +95,8 @@ class _ChatDetailsState extends State<ChatDetails> {
                           width: 2,
                         ),
                         CircleAvatar(
-                          backgroundImage:
-                          NetworkImage(snapshot.data!.data.opponent.avatarUrl),
+                          backgroundImage: NetworkImage(
+                              snapshot.data!.data.opponent.avatarUrl),
                           maxRadius: 20,
                         ),
                         SizedBox(
@@ -107,7 +116,8 @@ class _ChatDetailsState extends State<ChatDetails> {
                               ),
                               Text(
                                 snapshot.data!.data.lastMessageAt,
-                                style: TextStyle(color: Colors.green, fontSize: 12),
+                                style: TextStyle(
+                                    color: Colors.green, fontSize: 12),
                               ),
                             ],
                           ),
@@ -145,12 +155,12 @@ class _ChatDetailsState extends State<ChatDetails> {
                   padding: EdgeInsets.only(top: 15.0),
                   //itemCount: conversation.messages.length,
                   itemBuilder: (BuildContext context, int index) {
-                   // final Message message = conversation.messages[index];
+                    // final Message message = conversation.messages[index];
 
                     return ListTile(
-                     // title: Text(message.text),
-                    //  subtitle: Text(message.sender + ' · ' + message.time),
-                    );
+                        // title: Text(message.text),
+                        //  subtitle: Text(message.sender + ' · ' + message.time),
+                        );
                   },
                 ),
               ),
@@ -164,7 +174,11 @@ class _ChatDetailsState extends State<ChatDetails> {
                   Padding(
                     padding: const EdgeInsets.all(5.0),
                     child: Container(
-                      child: Icon(Icons.add_circle, size: 30,color: Colors.grey[700],),
+                      child: Icon(
+                        Icons.add_circle,
+                        size: 30,
+                        color: Colors.grey[700],
+                      ),
                     ),
                   ),
                   Expanded(
@@ -187,7 +201,9 @@ class _ChatDetailsState extends State<ChatDetails> {
                     iconSize: 25.0,
                     color: Colors.blue,
                     onPressed: () {
-                     // sendMessage(conversation, _controller, widget.chatData);
+                      chatProvider.triggerEvent();
+                      // chatProvider.triggerEvent(widget.vendorId,widget.chatData.id);
+                      // sendMessage(conversation, _controller, widget.chatData);
                     },
                   ),
                 ],
@@ -199,6 +215,7 @@ class _ChatDetailsState extends State<ChatDetails> {
     );
   }
 }
+
 //Fetch Api
 Future<ChatDetailsModel> fetchChatDetails(var user_id, var vendor_id) async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -211,7 +228,8 @@ Future<ChatDetailsModel> fetchChatDetails(var user_id, var vendor_id) async {
   };
 
   final response = await http.get(
-      Uri.parse("https://seller.sastowholesale.com/api/chats/start?customer_user_id=${user_id.toString()}&vendor_user_id=${vendor_id.toString()}&last_message_id=39"),
+      Uri.parse(
+          "https://seller.sastowholesale.com/api/chats/start?customer_user_id=${user_id.toString()}&vendor_user_id=${vendor_id.toString()}&last_message_id=39"),
       headers: header);
   if (response.statusCode == 200) {
     var jsonResponse = json.decode(response.body);
@@ -234,14 +252,14 @@ Future<List<Datum>> fetchChatMessage() async {
   };
 
   final response = await http.get(
-      Uri.parse("https://seller.sastowholesale.com/api/chats/9c842e8d-6a05-48cd-a5cc-ae000e48b8b3/messages"),
+      Uri.parse(
+          "https://seller.sastowholesale.com/api/chats/9c842e8d-6a05-48cd-a5cc-ae000e48b8b3/messages"),
       headers: header);
   if (response.statusCode == 200) {
     List jsonResponse = json.decode(response.body)["data"];
     print("data: ${jsonResponse}");
     print("surya:${jsonResponse}");
-    return jsonResponse
-        .map((data) => new Datum.fromJson(data)).toList();
+    return jsonResponse.map((data) => new Datum.fromJson(data)).toList();
   } else {
     throw Exception('Failed to load chat Item');
   }

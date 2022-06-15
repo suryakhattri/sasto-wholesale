@@ -11,6 +11,8 @@ import 'package:sasto_wholesale/fevorite.dart';
 import 'package:sasto_wholesale/home.dart';
 import 'package:sasto_wholesale/notification.dart';
 import 'package:sasto_wholesale/Profile/user_profile.dart';
+import 'package:sasto_wholesale/test_chat.dart';
+import 'package:sasto_wholesale/test_chat_pusher_client.dart';
 
 class BottomNavigationDataItems extends StatefulWidget {
   const BottomNavigationDataItems({Key? key}) : super(key: key);
@@ -26,6 +28,7 @@ class _BottomNavigationDataItemsState extends State<BottomNavigationDataItems> {
   final Home _home = Home();
   final ShoppingCartPage _shoppingCartPage = ShoppingCartPage();
   final ChatList _chatList = ChatList();
+  // final MyApp _chatList = MyApp();
   final UserProfile _userProfile = UserProfile();
 
   Widget _showPage = new Home();
