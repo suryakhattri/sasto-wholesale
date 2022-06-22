@@ -212,7 +212,7 @@ class _AllDealsState extends State<AllDeals> {
 Future<AllDealModel> fetchAllDealData() async {
 
   SharedPreferences preferences = await SharedPreferences.getInstance();
-  String loginToken = preferences.getString("login_token");
+  String loginToken = preferences.getString("login_token")!;
  // int userId = preferences.getInt("userId");
 
   var header = {'Content-type': 'application/json',

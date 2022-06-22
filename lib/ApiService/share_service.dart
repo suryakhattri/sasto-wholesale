@@ -18,7 +18,7 @@ class Network with ChangeNotifier {
 
   Future<String?> get authToken async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
-    return _authToken = localStorage.getString!("login_token");    //This is where the above error points at
+    return _authToken = localStorage.getString("login_token")!;    //This is where the above error points at
   }
 
   getToken() async {

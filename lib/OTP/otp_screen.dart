@@ -224,7 +224,7 @@ class _OTPScreenState extends State<OTPScreen> {
     //   'otp': otp,
     // };
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    int otp = preferences.getInt("otp");
+    int otp = preferences.getInt("otp")!;
     var url = 'https://seller.sastowholesale.com/api/user/verification-code/';
     var res = await http.post(Uri.parse(url + otp.toString()), headers: header);
     print(json.decode(res.body));

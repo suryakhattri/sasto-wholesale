@@ -478,8 +478,8 @@ class _EditProfileState extends State<EditProfile> {
     String gender,
   ) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    String loginToken = preferences.getString("login_token");
-    int userId = preferences.getInt("userId");
+    String loginToken = preferences.getString("login_token")!;
+    int userId = preferences.getInt("userId")!;
 
     var header = {
       'Accept': 'application/json',

@@ -32,7 +32,7 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
 
   void checkLogin() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    String loginToken = preferences.getString("login_token");
+    String? loginToken = preferences.getString("login_token");
     if (loginToken == null) {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => Login()), (route) => false);
@@ -353,6 +353,7 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
                                                                         .bold),
                                                           ),
                                                         ),
+                                                       // "Rs. ${(snapshot.data!.data.ranges[index].price * int.parse(_quantityController.text) + snapshot.data!.data.shippingCharge) }",
                                                         Text(
                                                           snapshot.data![index]
                                                               .totalPrice
@@ -495,7 +496,7 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
                         child: Column(
                           children: [
                             Image.asset(
-                              'assets/images/empty cart.png',
+                              'assets/images/emptycart.png',
                               height: 150,
                               width: 150,
                             ),

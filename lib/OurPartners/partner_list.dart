@@ -95,7 +95,7 @@ class _PartnerDataState extends State<PartnerData> {
       future: _partnerListModel,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return snapshot.data!.data.first.partners != null ? Padding(
+          return Padding(
             padding: const EdgeInsets.all(0.0),
             child: Container(
               height: 150,
@@ -126,23 +126,20 @@ class _PartnerDataState extends State<PartnerData> {
                             borderRadius: BorderRadius.circular(10),
                             child: Padding(
                               padding: const EdgeInsets.all(10.0),
-                              child: Hero(
-                                tag: _partnerListModel.hashCode,
-                                child: (snapshot.data!.data[index].partners!= null) // Only use the network image if the url is not null
-                                    ? Image.network(
-                                        snapshot.data!.data[index]
-                                            .partners[index].imageUrl,
-                                        loadingBuilder: (context, child,
-                                                loadingProgress) =>
-                                            (loadingProgress == null)
-                                                ? child
-                                                : CircularProgressIndicator(),
-                                        errorBuilder:
-                                            (context, error, stackTrace) =>
-                                                noImage,
-                                      )
-                                    : noImage,
-                              ),
+                              child: (snapshot.data!.data[index].partners.isNotEmpty) // Only use the network image if the url is not null
+                                  ? Image.network(
+                                      snapshot.data!.data[index]
+                                          .partners[index].imageUrl,
+                                      loadingBuilder: (context, child,
+                                              loadingProgress) =>
+                                          (loadingProgress == null)
+                                              ? child
+                                              : CircularProgressIndicator(),
+                                      errorBuilder:
+                                          (context, error, stackTrace) =>
+                                              noImage,
+                                    )
+                                  : noImage,
                             ),
                           ),
                         ),
@@ -165,7 +162,7 @@ class _PartnerDataState extends State<PartnerData> {
                 },
               )
             ),
-          ): Text("data");
+          );
         } else if (snapshot.hasError) {
           return Text('${snapshot.error}');
         }
@@ -189,5 +186,20 @@ Future<PartnerListModel> fetchPartnerList() async {
     return new PartnerListModel.fromJson(jsonResponse);
   } else {
     throw Exception('Failed to load Partner Data');
+  }
+}
+
+
+Future<List<Partner>> fetchPartnersImage() async {
+  final response = await http.get(
+      Uri.parse('https://seller.sastowholesale.com/api/our-partners'));
+  if (response.statusCode == 200) {
+    List jsonResponse = json.decode(response.body)['data'];
+    print("${response.body}");
+    return jsonResponse
+        .map((data) => new Partner.fromJson(data))
+        .toList();
+  } else {
+    throw Exception('Failed to load Partner Item');
   }
 }

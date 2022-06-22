@@ -223,7 +223,7 @@ class _ExpiredDealsState extends State<ExpiredDeals> {
 
 Future<AllDealModel> fetchExpiredDealData() async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
-  String loginToken = preferences.getString("login_token");
+  String loginToken = preferences.getString("login_token")!;
   // int userId = preferences.getInt("userId");
 
   var header = {

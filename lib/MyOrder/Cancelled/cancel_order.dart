@@ -172,7 +172,7 @@ class _CancelOrderState extends State<CancelOrder> {
 
 Future<CancelMyOrderModel> fetchCancelMyOrder() async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
-  String loginToken = preferences.getString("login_token");
+  String loginToken = preferences.getString("login_token")!;
 
   var header = {
     'Content-type': 'application/json',

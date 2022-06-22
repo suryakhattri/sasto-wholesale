@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:sasto_wholesale/CategoryDetails/Description/description_tab.dart';
 import 'package:sasto_wholesale/CategoryDetails/category_details_model.dart';
 import 'package:sasto_wholesale/CategoryDetails/vendor_profile.dart';
+import 'package:sasto_wholesale/Chat/chat_details.dart';
+import 'package:sasto_wholesale/Chat/chat_list.dart';
 import 'package:sasto_wholesale/DBHelper/db_helper.dart';
 import 'package:sasto_wholesale/Theme/theme.dart';
 import 'package:http/http.dart' as http;
@@ -45,8 +47,6 @@ class _ProductDetailPageState extends State<ProductDetailPage>
   void initState() {
     super.initState();
     CartItemProvider().getData();
-    // reviewCartProvider =
-    //     Provider.of<ReviewCartProvider>(context, listen: false);
     controller =
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
     animation = Tween<double>(begin: 0, end: 1).animate(
@@ -60,7 +60,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
     // Setting the initial value for the field.
   }
 
-  bool isLiked = true;
+ // bool isLiked = true;
 
   Widget _appBar() {
     return Container(
@@ -178,24 +178,19 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                     child: Stack(
                       alignment: Alignment.bottomCenter,
                       children: <Widget>[
-                        // Text(
-                        //   "AIP",
-                        //   style: TextStyle(fontSize: 160,
-                        //     color: Colors.black12,),
-                        // ),
                         Container(
-                          height: 200,
+                          height: 220,
                           width: 240,
                           color: Colors.transparent,
                           child: Material(
-                            //elevation: 10,
+                           // elevation: 1,
                             borderRadius: BorderRadius.circular(10),
                             child: PhotoView(
                               backgroundDecoration: BoxDecoration(
                                 color: Colors.transparent,
                               ),
                               imageProvider: NetworkImage(
-                                  _imageData[selectedImage].imageUrl),
+                                  _imageData[selectedImage].imageUrl,),
                             ),
                           ),
                         ),
@@ -529,11 +524,11 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                         //   highlightElevation: 2,
                         child: MaterialButton(
                           onPressed: () {
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (context) =>
-                            //         new BottomNavigationDataItems()));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                    new ChatList()));
                           },
                           minWidth: MediaQuery.of(context).size.width,
                           height: 50,
@@ -780,10 +775,10 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                               fontWeight: FontWeight.bold,
                               fontSize: 17),
                         ),
-                        trailing: snapshot.data!.data.priceRange != null
+                        trailing: snapshot.data!.data.priceRange != null || snapshot.data!.data.shippingCharge != null
                             ? Text(
                                 // snapshot.data!.data.priceRange,
-                                "Rs. ${(snapshot.data!.data.ranges[index].price * int.parse(_quantityController.text))}",
+                                "Rs. ${(snapshot.data!.data.ranges[index].price * int.parse(_quantityController.text) + snapshot.data!.data.shippingCharge) }",
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,

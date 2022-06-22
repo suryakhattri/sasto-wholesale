@@ -41,7 +41,7 @@ class _YouMayLikeState extends State<YouMayLike> {
                         shrinkWrap: true,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
-                          childAspectRatio: 0.65,
+                          childAspectRatio: 0.63,
                         ),
                         itemBuilder: (context, index) {
                           return InkWell(

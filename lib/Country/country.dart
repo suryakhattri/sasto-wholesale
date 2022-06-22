@@ -53,7 +53,7 @@ class _CountryState extends State<Country> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                new Suppliers()));
+                                new Suppliers(slug: _countryList[index].slug,)));
                      // }
                     },
                     child: Padding(

@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:sasto_wholesale/OurPartners/partner_model.dart';
 import 'package:sasto_wholesale/SastoWholeSale/Models/wholesaleMarketItems.dart';

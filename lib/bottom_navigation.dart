@@ -34,16 +34,12 @@ class _BottomNavigationDataItemsState extends State<BottomNavigationDataItems> {
     switch (page) {
       case 0:
         return _home;
-        break;
       case 1:
         return _shoppingCartPage;
-        break;
       case 2:
         return _chatList;
-        break;
       case 3:
         return _userProfile;
-        break;
       default:
         return new Container(
           child: new Center(

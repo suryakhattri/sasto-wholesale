@@ -1656,8 +1656,8 @@ class _CheckoutState extends State<Checkout> {
                         "eSewa mobile wallet",
                         1,
                         "assets/images/esewa-square.png"),
-                    customRadioButton("Connect IPS", "pay direct from bank", 2,
-                        "assets/images/connectips-square.png"),
+                    // customRadioButton("Connect IPS", "pay direct from bank", 2,
+                    //     "assets/images/connectips-square.png"),
                     customRadioButton(
                         "COD/Bank deposit/TT/LC",
                         "",
@@ -1695,10 +1695,12 @@ class _CheckoutState extends State<Checkout> {
                                 if (cashPaymentOption == 1) {
                                   Navigator.push(
                                       context, MaterialPageRoute(builder: (context) => new EsewaPayment()));
-                                } else if (cashPaymentOption == 2) {
-                                  Navigator.push(
-                                      context, MaterialPageRoute(builder: (context) => new ConnectIps()));
-                                } else if(cashPaymentOption == 3){
+                                }
+                                // else if (cashPaymentOption == 2) {
+                                //   Navigator.push(
+                                //       context, MaterialPageRoute(builder: (context) => new ConnectIps()));
+                                // }
+                                else if(cashPaymentOption == 2){
                                   setState(() {
                                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                       content: Text("Product Successfully Checked",
@@ -1885,7 +1887,7 @@ class _CheckoutState extends State<Checkout> {
     String jsondata = json.encode(data);
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    String loginToken = preferences.getString("login_token");
+    String loginToken = preferences.getString("login_token")!;
     Map<String, String> header = {
       'Accept': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $loginToken'
@@ -1940,9 +1942,8 @@ class _CheckoutState extends State<Checkout> {
 
 Future<CheckOutUserModel> fetchCheckOutUserData() async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
-  String loginToken = preferences.getString("login_token");
-  int userId = preferences.getInt("userId");
-
+  String loginToken = preferences.getString("login_token")!;
+  int userId = preferences.getInt("userId")!;
   var header = {
     'Content-type': 'application/json',
     'Accept': 'application/json',

@@ -8,29 +8,29 @@ import 'package:intl/intl.dart';
 import 'package:sasto_wholesale/Chat/message_model.dart';
 import 'package:sasto_wholesale/Chat/web_services.dart';
 
-class Conversation extends ChangeNotifier{
-  late String _message;
- // late Channel _channel;
-
-  String get message => _message;
-
-  List<Message> messages = [];
-
-  void sendMessage(String text, String uuid) {
-    final String time = DateFormat('mm:ss a').format(DateTime.now());
-
-    if(text != ''){
-      messages.insert(0,
-        Message(
-            sender: 'Me',
-            time: time,
-            text: text
-        ),
-      );
-      //Webservice.broadcast(Message.to(uuid, text, time));
-      notifyListeners();
-    }
-  }
+// class Conversation extends ChangeNotifier{
+//   late String _message;
+//  // late Channel _channel;
+//
+//   String get message => _message;
+//
+//   List<Message> messages = [];
+//
+//   void sendMessage(String text, String uuid) {
+//     final String time = DateFormat('mm:ss a').format(DateTime.now());
+//
+//     if(text != ''){
+//       messages.insert(0,
+//         Message(
+//             sender: 'Me',
+//             time: time,
+//             text: text
+//         ),
+//       );
+//       //Webservice.broadcast(Message.to(uuid, text, time));
+//       notifyListeners();
+//     }
+//   }
 
   // void bindEvent(String channelName, String eventName) async{
   //   await initPusher();
@@ -56,4 +56,4 @@ class Conversation extends ChangeNotifier{
   //     print(e.message);
   //   }
   // }
-}
+//}

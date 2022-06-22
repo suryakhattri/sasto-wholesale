@@ -386,98 +386,98 @@ class _LoginState extends State<Login> {
                             SizedBox(
                               height: 10,
                             ),
-                            Divider(
-                              thickness: 2,
-                              endIndent: 15,
-                              indent: 15,
-                              color: Colors.blue,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20.0, top: 10, bottom: 0),
-                              child: Text(
-                                "Sign In With:",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  width: MediaQuery.of(context).size.width / 2.3,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 10.0, left: 10, right: 10),
-                                    child: Material(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(10.0)),
-                                      color: Colors.blue[900],
-                                      elevation: 2.0,
-                                      child: MaterialButton(
-                                        onPressed: () {
-                                          // Navigator.push(
-                                          //     context,
-                                          //     MaterialPageRoute(
-                                          //         builder: (context) =>
-                                          //         new BottomNavigationDataItems()));
-                                        },
-                                        minWidth: MediaQuery.of(context).size.width,
-                                        height: 50,
-                                        child: Text(
-                                          "FACEBOOK",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 17.0),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  width: MediaQuery.of(context).size.width / 2.3,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 10.0, left: 10, right: 10),
-                                    child: Material(
-                                      // borderRadius: BorderRadius.circular(28.0),
-                                      // color: Colors.blue.withOpacity(0.8),
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(10.0)),
-                                      color: Colors.red[900],
-                                      elevation: 2.0,
-                                      //   highlightElevation: 2,
-                                      child: MaterialButton(
-                                        onPressed: () {
-                                          // Navigator.push(
-                                          //     context,
-                                          //     MaterialPageRoute(
-                                          //         builder: (context) =>
-                                          //         new BottomNavigationDataItems()));
-                                        },
-                                        minWidth: MediaQuery.of(context).size.width,
-                                        height: 50,
-                                        child: Text(
-                                          "GOOGLE",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 17.0),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
+                            // Divider(
+                            //   thickness: 2,
+                            //   endIndent: 15,
+                            //   indent: 15,
+                            //   color: Colors.blue,
+                            // ),
+                            // Padding(
+                            //   padding: const EdgeInsets.only(
+                            //       left: 20.0, top: 10, bottom: 0),
+                            //   child: Text(
+                            //     "Sign In With:",
+                            //     style: TextStyle(
+                            //         color: Colors.black,
+                            //         fontSize: 18,
+                            //         fontWeight: FontWeight.bold),
+                            //   ),
+                            // ),
+                            // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            //   children: [
+                            //     Container(
+                            //       width: MediaQuery.of(context).size.width / 2.3,
+                            //       child: Padding(
+                            //         padding: const EdgeInsets.only(
+                            //             top: 10.0, left: 10, right: 10),
+                            //         child: Material(
+                            //           shape: RoundedRectangleBorder(
+                            //               borderRadius: BorderRadius.circular(10.0)),
+                            //           color: Colors.blue[900],
+                            //           elevation: 2.0,
+                            //           child: MaterialButton(
+                            //             onPressed: () {
+                            //               // Navigator.push(
+                            //               //     context,
+                            //               //     MaterialPageRoute(
+                            //               //         builder: (context) =>
+                            //               //         new BottomNavigationDataItems()));
+                            //             },
+                            //             minWidth: MediaQuery.of(context).size.width,
+                            //             height: 50,
+                            //             child: Text(
+                            //               "FACEBOOK",
+                            //               textAlign: TextAlign.center,
+                            //               style: TextStyle(
+                            //                   color: Colors.white,
+                            //                   fontWeight: FontWeight.bold,
+                            //                   fontSize: 17.0),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //     Container(
+                            //       width: MediaQuery.of(context).size.width / 2.3,
+                            //       child: Padding(
+                            //         padding: const EdgeInsets.only(
+                            //             top: 10.0, left: 10, right: 10),
+                            //         child: Material(
+                            //           // borderRadius: BorderRadius.circular(28.0),
+                            //           // color: Colors.blue.withOpacity(0.8),
+                            //           shape: RoundedRectangleBorder(
+                            //               borderRadius: BorderRadius.circular(10.0)),
+                            //           color: Colors.red[900],
+                            //           elevation: 2.0,
+                            //           //   highlightElevation: 2,
+                            //           child: MaterialButton(
+                            //             onPressed: () {
+                            //               // Navigator.push(
+                            //               //     context,
+                            //               //     MaterialPageRoute(
+                            //               //         builder: (context) =>
+                            //               //         new BottomNavigationDataItems()));
+                            //             },
+                            //             minWidth: MediaQuery.of(context).size.width,
+                            //             height: 50,
+                            //             child: Text(
+                            //               "GOOGLE",
+                            //               textAlign: TextAlign.center,
+                            //               style: TextStyle(
+                            //                   color: Colors.white,
+                            //                   fontWeight: FontWeight.bold,
+                            //                   fontSize: 17.0),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //   ],
+                            // ),
+                            // SizedBox(
+                            //   height: 20,
+                            // ),
                             Center(
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),

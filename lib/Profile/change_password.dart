@@ -327,7 +327,7 @@ class _ChangePasswordState extends State<ChangePassword> {
     String confirmPassword,
   ) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    String loginToken = preferences.getString("login_token");
+    String loginToken = preferences.getString("login_token")!;
 
     var header = {
       'Accept': 'application/json',

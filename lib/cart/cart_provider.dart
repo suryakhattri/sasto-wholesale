@@ -26,9 +26,9 @@ class CartItemProvider with ChangeNotifier {
 
   Future<List<CartModel>?> getData() async {
     _cartList = dbHelper!.getCartList();
-    notifyListeners();
     return _cartList;
   }
+
 
   int _counter = 0;
 
@@ -65,7 +65,6 @@ class CartItemProvider with ChangeNotifier {
 
   int getCounter() {
     _getPrefItems();
-    notifyListeners();
     return _counter;
   }
 

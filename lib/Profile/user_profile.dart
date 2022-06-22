@@ -36,9 +36,10 @@ class _UserProfileState extends State<UserProfile> {
     _profileData = fetchProfileData();
   }
 
+
   void checkLogin() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    String loginToken = preferences.getString("login_token");
+    String? loginToken = preferences.getString("login_token");
     if (loginToken == null) {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => Login()),
@@ -359,7 +360,7 @@ class _UserProfileState extends State<UserProfile> {
                           Navigator.push(
                           context,
                           MaterialPageRoute(
-                          builder: (context) => new Suppliers()));
+                          builder: (context) => new Suppliers(slug: '',)));
                           } else if(index == 3) {
                           Navigator.push(
                           context,
@@ -512,8 +513,8 @@ class _UserProfileState extends State<UserProfile> {
 
 Future<ProfileModel> fetchProfileData() async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
-  String loginToken = preferences.getString("login_token");
-  int userId = preferences.getInt("userId");
+  String loginToken = preferences.getString("login_token")!;
+  int userId = preferences.getInt("userId")!;
 
   var header = {'Content-type': 'application/json',
     'Accept': 'application/json',

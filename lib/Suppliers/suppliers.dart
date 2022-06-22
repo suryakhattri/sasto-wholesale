@@ -8,7 +8,8 @@ import 'package:sasto_wholesale/TopProducts/top_product_all_item_model.dart';
 import 'package:http/http.dart' as http;
 
 class Suppliers extends StatefulWidget {
-  const Suppliers({Key? key}) : super(key: key);
+  const Suppliers({Key? key, required this.slug}) : super(key: key);
+  final String slug;
 
   @override
   _SuppliersState createState() => _SuppliersState();
@@ -21,7 +22,7 @@ class _SuppliersState extends State<Suppliers> {
   @override
   void initState() {
     super.initState();
-    _suppliersData = fetchSuppliersItem();
+    _suppliersData = fetchSuppliersItem(widget.slug);
   }
 
   @override
@@ -185,9 +186,9 @@ class _SuppliersState extends State<Suppliers> {
   }
 }
 
-Future<List<SuppliersDataModel>> fetchSuppliersItem() async {
+Future<List<SuppliersDataModel>> fetchSuppliersItem(String slug) async {
   final response = await http
-      .get(Uri.parse('https://seller.sastowholesale.com/api/vendors?from='));
+      .get(Uri.parse('https://seller.sastowholesale.com/api/vendors?from=${slug}'));
   if (response.statusCode == 200) {
     List jsonResponse = json.decode(response.body)['data'];
     print("${response.body}");
@@ -195,6 +196,6 @@ Future<List<SuppliersDataModel>> fetchSuppliersItem() async {
         .map((data) => new SuppliersDataModel.fromJson(data))
         .toList();
   } else {
-    throw Exception('Failed to load Top Product Data');
+    throw Exception('Failed to load Suppliers');
   }
 }

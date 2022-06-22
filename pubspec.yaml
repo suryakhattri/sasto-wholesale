@@ -32,11 +32,11 @@ dependencies:
   smooth_star_rating: ^1.1.1
   timelines: ^0.1.0
   syncfusion_flutter_datagrid:
-  http: ^0.13.2
+  http:
   image_picker:
-  flutter_slidable:
+  flutter_slidable: 0.6.0
   provider: ^6.0.0
-  shared_preferences: ^0.5.8
+  shared_preferences: ^2.0.15
   sqflite: ^2.0.2+1
   photo_view:
   flutter_html:
@@ -45,12 +45,14 @@ dependencies:
   get_storage:
   sms_autofill:
   intl:
-  #pusher_websocket_flutter:
   webview_flutter:
   esewa_pnp: ^2.0.1
   carousel_slider: ^3.0.0
-  #stream_chat_flutter:
-  #splashscreen: ^1.3.5
+  animations: ^2.0.1
+  collection: ^1.15.0
+  cached_network_image:
+  equatable: ^2.0.3
+  pusher_client: ^2.0.0
   #flutter_facebook_auth:
 
 dev_dependencies:
@@ -124,7 +126,7 @@ flutter:
     - assets/esewa/
     - assets/images/welcome (1).png
     - assets/images/welcome.png
-    - assets/images/empty cart.png
+    - assets/images/emptycart.png
 
   #   - images/a_dot_ham.jpeg
 
